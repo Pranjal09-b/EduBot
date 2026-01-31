@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Java Quiz - EduBot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f0f2f5;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* App Container */
+.app {
+  width: 900px; /* smaller width like program.html */
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 16px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #6f42c1;
+}
+
+.logout {
+  border: 1px solid #ddd;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Title */
+.title {
+  margin: 24px 0 18px;
+}
+
+.title h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.title p {
+  margin-top: 6px;
+  color: #555;
+}
+
+/* Layout */
+.content {
+  display: grid;
+  grid-template-columns: 200px 1fr 220px; /* smaller sidebar & stats like program.html */
+  gap: 20px;
+  flex: 1;
+}
+
+/* Sidebar */
+.sidebar {
+  border-right: 1px solid #eee;
+  padding-right: 12px;
+}
+
+.sidebar h3 {
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.quiz-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.quiz-list li {
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 6px;
+  transition: background 0.2s;
+}
+
+.quiz-list li:hover {
+  background: #f1e4ff;
+}
+
+.quiz-list li.active {
+  background: #6f42c1;
+  color: white;
+}
+
+/* Quiz Card */
+.quiz-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 26px 20px;
+  box-shadow: 0 5px 15px rgb(0 0 0 / 0.1);
+}
+
+.question {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.option {
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.option:hover {
+  border-color: #6f42c1;
+  background: #f9f2ff;
+}
+
+.option input {
+  transform: scale(1.2);
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+button {
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.prev {
+  background: #f1f1f1;
+}
+
+.next {
+  background: #6f42c1;
+  color: #fff;
+}
+
+.next:hover {
+  background: #5a34a1;
+}
+
+/* Stats Panel */
+.stats {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 18px;
+  height: fit-content;
+  border: 1px solid #eee;
+}
+
+.stat {
+  text-align: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.stat:last-child {
+  border-bottom: none;
+}
+
+.stat h3 {
+  margin: 0;
+  font-size: 24px;
+  color: #28a745;
+}
+
+.stat.blue h3 {
+  color: #007bff;
+}
+
+.stat.purple h3 {
+  color: #7b2cbf;
+}
+
+.stat p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  margin-top: 18px;
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+  display: flex;
+  justify-content: space-around;
+  font-size: 14px;
+}
+
+.bottom-nav button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: #666;
+}
+
+.bottom-nav .active {
+  color: #6f42c1;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">📘 EduBot</div>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Title -->
+  <div class="title">
+    <h1>Java Quiz</h1>
+    <p>Test your Java knowledge with interactive quizzes</p>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>Quiz List</h3>
+      <ul class="quiz-list">
+        <li class="active" onclick="loadQuiz(0)">Question 1</li>
+        <li onclick="loadQuiz(1)">Question 2</li>
+      </ul>
+    </div>
+
+    <!-- Quiz Card -->
+    <div class="quiz-card" id="quizCard">
+
+      <div class="question" id="question">What is the main method signature in Java?</div>
+
+      <label class="option">
+        <input type="radio" name="answer">
+        public static void main(String args[])
+      </label>
+
+      <label class="option">
+        <input type="radio" name="answer">
+        public void main(String args[])
+      </label>
+
+      <label class="option">
+        <input type="radio" name="answer">
+        static void main(String args[])
+      </label>
+
+      <label class="option">
+        <input type="radio" name="answer">
+        public main(String args[])
+      </label>
+
+      <div class="buttons">
+        <button class="prev" onclick="prevQuestion()">Previous</button>
+        <button class="next" onclick="nextQuestion()">Next</button>
+      </div>
+
+    </div>
+
+    <!-- Stats Panel -->
+    <div class="stats">
+      <div class="stat">
+        <h3>85%</h3>
+        <p>Average Score</p>
+      </div>
+      <div class="stat blue">
+        <h3>12</h3>
+        <p>Quizzes Completed</p>
+      </div>
+      <div class="stat purple">
+        <h3>4</h3>
+        <p>Perfect Scores</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <button onclick="goTo('home.html')">Home</button>
+    <button onclick="goTo('chat.html')">Chat</button>
+    <button onclick="goTo('program.html')">Program</button>
+    <button class="active">Quiz</button>
+    <button onclick="goTo('flashcard.html')">Cards</button>
+    <button onclick="goTo('Progress.html')">Progress</button>
+  </div>
+
+</div>
+
+<script>
+const quizzes = [
+  { question: "What is the main method signature in Java?", options: ["public static void main(String args[])", "public void main(String args[])", "static void main(String args[])", "public main(String args[])"] },
+  { question: "Which keyword is used to inherit a class in Java?", options: ["extends", "implements", "super", "this"] }
+];
+
+let currentIndex = 0;
+const questionEl = document.getElementById("question");
+const quizListItems = document.querySelectorAll(".quiz-list li");
+
+function loadQuiz(index) {
+  currentIndex = index;
+  questionEl.textContent = quizzes[index].question;
+
+  const options = quizzes[index].options;
+  const optionEls = document.querySelectorAll(".option");
+  optionEls.forEach((el, i) => el.childNodes[1].textContent = options[i]);
+
+  quizListItems.forEach(li => li.classList.remove("active"));
+  quizListItems[index].classList.add("active");
+}
+
+function nextQuestion() {
+  if(currentIndex < quizzes.length - 1) loadQuiz(currentIndex + 1);
+}
+
+function prevQuestion() {
+  if(currentIndex > 0) loadQuiz(currentIndex - 1);
+}
+
+function goTo(page) { window.location.href = page; }
+function logout() { alert("Logged out!"); }
+
+loadQuiz(0);
+</script>
+
+</body>
+</html>

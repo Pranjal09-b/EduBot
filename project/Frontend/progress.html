@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Progress Tracker - EduBot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f0f2f5;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* App Container */
+.app {
+  width: 900px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  padding: 30px 36px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 16px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #6f42c1;
+}
+
+.logout {
+  border: 1px solid #ddd;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Title */
+.title {
+  margin: 24px 0 24px;
+}
+
+.title h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.title p {
+  margin-top: 6px;
+  color: #555;
+}
+
+/* Stats Grid */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.stat-card {
+  background: #fafafa;
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  border-left: 4px solid #6f42c1;
+}
+
+.stat-card h2 {
+  margin: 0;
+  font-size: 28px;
+  color: #6f42c1;
+}
+
+.stat-card p {
+  margin-top: 6px;
+  color: #555;
+  font-size: 14px;
+}
+
+/* Progress Section */
+.progress-section {
+  margin-top: 30px;
+}
+
+.progress-section h3 {
+  margin-bottom: 10px;
+}
+
+.progress-bar {
+  height: 10px;
+  background: #e5e5e5;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  width: 70%;
+  background: linear-gradient(90deg, #6f42c1, #8b5cf6);
+}
+
+/* Activity */
+.activity {
+  margin-top: 30px;
+}
+
+.activity h3 {
+  margin-bottom: 10px;
+}
+
+.activity ul {
+  list-style: none;
+  padding: 0;
+}
+
+.activity li {
+  padding: 12px;
+  border-radius: 10px;
+  background: #fafafa;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+/* Bottom Nav */
+.bottom-nav {
+  margin-top: 30px;
+  border-top: 1px solid #eee;
+  padding-top: 14px;
+  display: flex;
+  justify-content: space-around;
+  font-size: 14px;
+}
+
+.bottom-nav button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: #666;
+}
+
+.bottom-nav .active {
+  color: #6f42c1;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">📊 EduBot</div>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Title -->
+  <div class="title">
+    <h1>Progress Tracker</h1>
+    <p>Monitor your learning progress and achievements</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card">
+      <h2>12</h2>
+      <p>Quizzes Completed</p>
+    </div>
+    <div class="stat-card">
+      <h2>85%</h2>
+      <p>Average Quiz Score</p>
+    </div>
+    <div class="stat-card">
+      <h2>4</h2>
+      <p>Perfect Scores</p>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-section">
+    <h3>Overall Course Progress</h3>
+    <div class="progress-bar">
+      <div class="progress" id="overallProgress"></div>
+    </div>
+    <p id="progressText" style="margin-top:8px; color:#555;">70% Completed</p>
+  </div>
+
+  <!-- Activity -->
+  <div class="activity">
+    <h3>Recent Activity</h3>
+    <ul>
+      <li>✔ Completed Java Quiz (Score: 90%)</li>
+      <li>📖 Studied Flashcards: OOP Concepts</li>
+      <li>💬 Asked question in Chatbot</li>
+      <li>📝 Practiced Factorial Program</li>
+    </ul>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <button onclick="goTo('home.html')">Home</button>
+    <button onclick="goTo('chat.html')">Chat</button>
+    <button onclick="goTo('program.html')">Program</button>
+    <button onclick="goTo('quiz.html')">Quiz</button>
+    <button onclick="goTo('flashcard.html')">Cards</button>
+     <button class="active">Progress</button>
+
+  </div>
+
+</div>
+
+<script>
+function goTo(page) {
+  window.location.href = page;
+}
+
+function logout() {
+  alert("Logged out!");
+}
+</script>
+
+</body>
+</html>

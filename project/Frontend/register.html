@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EduBot - Register</title>
+
+<style>
+  * { box-sizing: border-box; }
+
+  body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #d7d0f2, #c0d4f7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 30px 30px 40px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 8px 20px rgba(112, 144, 216, 0.25);
+    text-align: center;
+  }
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-weight: 600;
+    color: #4b4b7a;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0 20px;
+    border: 1.5px solid #c0c4d1;
+    border-radius: 10px;
+    font-size: 16px;
+  }
+
+  button {
+    width: 100%;
+    background-color: #8da6e0;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 15px 0;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .login-link {
+    margin-top: 20px;
+    display: block;
+    font-size: 14px;
+    color: #8da6e0;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>EduBot - Register</h2>
+
+  <!-- Flask-connected form -->
+  <form id="registerForm" method="POST" action="{{ url_for('register_post') }}" autocomplete="off" novalidate>
+    <input type="text" id="username" name="username" placeholder="Enter Username" required />
+    <input type="email" id="email" name="email" placeholder="Enter Email" required />
+    <input type="password" id="password" name="password" placeholder="Enter Password" required />
+    <button type="submit">Register</button>
+  </form>
+
+  <!-- Flask-safe link -->
+  <a href="{{ url_for('login') }}" class="login-link">
+    Already have an account? Login
+  </a>
+</div>
+
+<script>
+  const form = document.getElementById('registerForm');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const username = form.username.value.trim();
+    const email = form.email.value.trim();
+    const password = form.password.value;
+
+    if (!username) {
+      alert('Please enter a username.');
+      form.username.focus();
+      return;
+    }
+
+    if (!email) {
+      alert('Please enter an email.');
+      form.email.focus();
+      return;
+    }
+
+    if (!password) {
+      alert('Please enter a password.');
+      form.password.focus();
+      return;
+    }
+
+    const formData = new FormData(form);
+
+    const response = await fetch(form.action, {
+      method: "POST",
+      body: formData
+    });
+
+    if (response.redirected) {
+      alert(`Registered successfully!\nUsername: ${username}\nEmail: ${email}`);
+      window.location.href = response.url;
+    } else {
+      alert("Registration failed. Try again.");
+    }
+  });
+</script>
+
+</body>
+</html>

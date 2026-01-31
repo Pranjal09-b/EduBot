@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Java Programs - EduBot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f0f2f5;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* App Container */
+.app {
+  width: 1100px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 16px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #6f42c1;
+}
+
+.logout {
+  border: 1px solid #ddd;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Title */
+.title {
+  margin: 24px 0 18px;
+}
+
+.title h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.title p {
+  margin-top: 6px;
+  color: #555;
+}
+
+/* Layout */
+.content {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  flex: 1;
+}
+
+/* Sidebar */
+.sidebar {
+  border-right: 1px solid #eee;
+  padding-right: 16px;
+}
+
+.sidebar h3 {
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.program-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.program-list li {
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 6px;
+  transition: background 0.2s;
+}
+
+.program-list li:hover {
+  background: #f1e4ff;
+}
+
+.program-list li.active {
+  background: #6f42c1;
+  color: white;
+}
+
+/* Program Area */
+.program-area {
+  padding-left: 10px;
+}
+
+.program-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+pre {
+  background: #f8f8f8;
+  padding: 16px;
+  border-radius: 10px;
+  overflow-x: auto;
+  font-size: 14px;
+}
+
+.explanation {
+  margin-top: 16px;
+  background: #fafafa;
+  padding: 16px;
+  border-radius: 10px;
+  border-left: 4px solid #6f42c1;
+}
+
+.explanation h4 {
+  margin-top: 0;
+}
+
+/* Bottom Nav */
+.bottom-nav {
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 14px;
+  display: flex;
+  justify-content: space-around;
+  font-size: 14px;
+}
+
+.bottom-nav button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: #666;
+}
+
+.bottom-nav .active {
+  color: #6f42c1;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">📘 EduBot</div>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Title -->
+  <div class="title">
+    <h1>Java Programs</h1>
+    <p>Browse lab programs with detailed explanation and examples</p>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>Program List</h3>
+      <ul class="program-list">
+        <li class="active" onclick="loadProgram(0)">Hello World</li>
+        <li onclick="loadProgram(1)">Sum of Two Numbers</li>
+        <li onclick="loadProgram(2)">Factorial of a Number</li>
+      </ul>
+    </div>
+
+    <!-- Program Display -->
+    <div class="program-area">
+      <div class="program-title" id="programTitle"></div>
+
+      <pre id="programCode"></pre>
+
+      <div class="explanation">
+        <h4>Explanation</h4>
+        <p id="programExplanation"></p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <button onclick="goTo('home.html')">Home</button>
+    <button onclick="goTo('chat.html')">Chat</button>
+     <button class="active">Program</button>
+    <button onclick="goTo('quiz.html')">Quiz</button>
+    <button onclick="goTo('flashcard.html')">Cards</button>
+        <button onclick="goTo('Progress.html')">Progress</button>
+  </div>
+
+</div>
+
+<script>
+const programs = [
+  {
+    title: "Hello World Program",
+    code:
+`public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}`,
+    explanation:
+      "This is the basic Java program. The main() method is the entry point of execution. System.out.println() prints text to the console."
+  },
+  {
+    title: "Sum of Two Numbers",
+    code:
+`import java.util.Scanner;
+
+public class Sum {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int a = sc.nextInt();
+        int b = sc.nextInt();
+        System.out.println(a + b);
+    }
+}`,
+    explanation:
+      "This program takes two integers as input using Scanner and prints their sum."
+  },
+  {
+    title: "Factorial of a Number",
+    code:
+`import java.util.Scanner;
+
+public class Factorial {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int fact = 1;
+
+        for(int i = 1; i <= n; i++) {
+            fact *= i;
+        }
+
+        System.out.println(fact);
+    }
+}`,
+    explanation:
+      "This program calculates the factorial of a number using a loop. Factorial is the product of all numbers from 1 to n."
+  }
+];
+
+const programTitle = document.getElementById("programTitle");
+const programCode = document.getElementById("programCode");
+const programExplanation = document.getElementById("programExplanation");
+const listItems = document.querySelectorAll(".program-list li");
+
+function loadProgram(index) {
+  listItems.forEach(li => li.classList.remove("active"));
+  listItems[index].classList.add("active");
+
+  programTitle.textContent = programs[index].title;
+  programCode.textContent = programs[index].code;
+  programExplanation.textContent = programs[index].explanation;
+}
+
+function goTo(page) {
+  window.location.href = page;
+}
+
+function logout() {
+  alert("Logged out!");
+}
+
+loadProgram(0);
+</script>
+
+</body>
+</html>

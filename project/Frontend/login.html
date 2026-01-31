@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EduBot - Login</title>
+
+<style>
+  * { box-sizing: border-box; }
+
+  body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #b8e0d2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container {
+    background-color: white;
+    border-radius: 20px;
+    padding: 30px 30px 40px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 8px 20px rgba(88, 182, 159, 0.25);
+    text-align: center;
+  }
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-weight: 600;
+    color: #2f6659;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0 20px;
+    border: 1.5px solid #a3ccc0;
+    border-radius: 10px;
+    font-size: 16px;
+  }
+
+  button {
+    width: 100%;
+    background-color: #88bcb0;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 15px 0;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .register-link {
+    margin-top: 20px;
+    display: block;
+    font-size: 14px;
+    color: #88bcb0;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>EduBot - Login</h2>
+
+  <!-- Flask-connected form -->
+  <form id="loginForm" method="POST" action="{{ url_for('login_post') }}" autocomplete="off" novalidate>
+    <input type="text" id="username" name="username" placeholder="Enter Username" required />
+    <input type="password" id="password" name="password" placeholder="Enter Password" required />
+    <button type="submit">Login</button>
+  </form>
+
+  <!-- Flask link -->
+  <a href="{{ url_for('register') }}" class="register-link">
+    Don’t have an account? Register
+  </a>
+</div>
+
+<script>
+  const form = document.getElementById('loginForm');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const username = form.username.value.trim();
+    const password = form.password.value;
+
+    if (!username) {
+      alert('Please enter a username.');
+      form.username.focus();
+      return;
+    }
+
+    if (!password) {
+      alert('Please enter a password.');
+      form.password.focus();
+      return;
+    }
+
+    // Send data to Flask backend
+    const formData = new FormData(form);
+
+    const response = await fetch(form.action, {
+      method: "POST",
+      body: formData
+    });
+
+    // Flask will redirect if login is successful
+    if (response.redirected) {
+      alert(`Logged in successfully!\nUsername: ${username}`);
+      window.location.href = response.url;
+    } else {
+      alert("Invalid login credentials");
+    }
+  });
+</script>
+
+</body>
+</html>
