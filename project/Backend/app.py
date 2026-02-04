@@ -19,24 +19,26 @@ def login():
 # ======================================================
 @app.route("/login", methods=["POST"])
 def login_post():
-    username = request.form["username"]
+    email = request.form["email"]
     password = request.form["password"]
 
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM users WHERE username=%s", (username,))
-    user = cursor.fetchone()
+    # ✅ Check student by email
+    cursor.execute("SELECT * FROM students WHERE email=%s", (email,))
+    student = cursor.fetchone()
 
     cursor.close()
     conn.close()
 
-    # Check password
-    if user and check_password_hash(user["password"], password):
-        session["user"] = username
+    # ✅ Password verification
+    if student and check_password_hash(student["password_hash"], password):
+        session["student"] = student["name"]
         return redirect(url_for("home"))
 
-    return "❌ Invalid Username or Password"
+    # ❌ Incorrect password/email
+    return "❌ Incorrect Email or Password"
 
 
 # ======================================================
@@ -52,7 +54,7 @@ def register():
 # ======================================================
 @app.route("/register", methods=["POST"])
 def register_post():
-    username = request.form["username"]
+    name = request.form["name"]
     email = request.form["email"]
     password = request.form["password"]
 
@@ -62,16 +64,17 @@ def register_post():
     cursor = conn.cursor()
 
     try:
+        # ✅ Insert into students table
         cursor.execute(
-            "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)",
-            (username, email, hashed_password)
+            "INSERT INTO students (name, email, password_hash) VALUES (%s, %s, %s)",
+            (name, email, hashed_password)
         )
         conn.commit()
 
     except:
         cursor.close()
         conn.close()
-        return "❌ Username already exists!"
+        return "❌ Email already exists!"
 
     cursor.close()
     conn.close()
@@ -84,7 +87,7 @@ def register_post():
 # ======================================================
 @app.route("/home")
 def home():
-    if "user" not in session:
+    if "student" not in session:
         return redirect(url_for("login"))
 
     return render_template("home.html")
@@ -95,7 +98,7 @@ def home():
 # ======================================================
 @app.route("/chat")
 def chat():
-    if "user" not in session:
+    if "student" not in session:
         return redirect(url_for("login"))
 
     return render_template("chat.html")
@@ -106,7 +109,7 @@ def chat():
 # ======================================================
 @app.route("/quiz")
 def quiz():
-    if "user" not in session:
+    if "student" not in session:
         return redirect(url_for("login"))
 
     return render_template("quiz.html")
@@ -117,7 +120,7 @@ def quiz():
 # ======================================================
 @app.route("/flashcard")
 def flashcard():
-    if "user" not in session:
+    if "student" not in session:
         return redirect(url_for("login"))
 
     return render_template("flashcard.html")
@@ -128,7 +131,7 @@ def flashcard():
 # ======================================================
 @app.route("/program")
 def program():
-    if "user" not in session:
+    if "student" not in session:
         return redirect(url_for("login"))
 
     return render_template("program.html")
@@ -139,7 +142,7 @@ def program():
 # ======================================================
 @app.route("/progress")
 def progress():
-    if "user" not in session:
+    if "student" not in session:
         return redirect(url_for("login"))
 
     return render_template("progress.html")
