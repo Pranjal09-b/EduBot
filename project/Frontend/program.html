@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Java Programs - EduBot</title>
+<title>Programs - EduBot</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -20,9 +20,8 @@ body {
   align-items: center;
 }
 
-/* App Container */
 .app {
-  width: 1100px;
+  width: 900px;
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.12);
@@ -31,7 +30,6 @@ body {
   flex-direction: column;
 }
 
-/* Header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -41,9 +39,6 @@ body {
 }
 
 .brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
   font-size: 20px;
   font-weight: 700;
   color: #6f42c1;
@@ -58,7 +53,6 @@ body {
   font-weight: 600;
 }
 
-/* Title */
 .title {
   margin: 24px 0 18px;
 }
@@ -73,23 +67,20 @@ body {
   color: #555;
 }
 
-/* Layout */
 .content {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 240px 1fr;
   gap: 20px;
   flex: 1;
 }
 
-/* Sidebar */
 .sidebar {
   border-right: 1px solid #eee;
-  padding-right: 16px;
+  padding-right: 12px;
 }
 
 .sidebar h3 {
   margin-bottom: 12px;
-  font-size: 16px;
 }
 
 .program-list {
@@ -99,10 +90,9 @@ body {
 }
 
 .program-list li {
-  padding: 12px;
+  padding: 10px;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 14px;
   margin-bottom: 6px;
   transition: background 0.2s;
 }
@@ -111,50 +101,33 @@ body {
   background: #f1e4ff;
 }
 
-.program-list li.active {
-  background: #6f42c1;
-  color: white;
-}
-
-/* Program Area */
-.program-area {
-  padding-left: 10px;
+.program-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgb(0 0 0 / 0.1);
 }
 
 .program-title {
   font-size: 20px;
   font-weight: 700;
+  color: #6f42c1;
   margin-bottom: 12px;
 }
 
 pre {
   background: #f8f8f8;
-  padding: 16px;
+  padding: 15px;
   border-radius: 10px;
   overflow-x: auto;
-  font-size: 14px;
 }
 
-.explanation {
-  margin-top: 16px;
-  background: #fafafa;
-  padding: 16px;
-  border-radius: 10px;
-  border-left: 4px solid #6f42c1;
-}
-
-.explanation h4 {
-  margin-top: 0;
-}
-
-/* Bottom Nav */
 .bottom-nav {
-  margin-top: 20px;
+  margin-top: 18px;
   border-top: 1px solid #eee;
-  padding-top: 14px;
+  padding-top: 12px;
   display: flex;
   justify-content: space-around;
-  font-size: 14px;
 }
 
 .bottom-nav button {
@@ -175,132 +148,58 @@ pre {
 
 <div class="app">
 
-  <!-- Header -->
   <div class="header">
-    <div class="brand">📘 EduBot</div>
-    <button class="logout" onclick="logout()">Logout</button>
+    <div class="brand">💻 EduBot Programs</div>
+    <button class="logout" onclick="window.location.href='/logout'">Logout</button>
   </div>
 
-  <!-- Title -->
   <div class="title">
-    <h1>Java Programs</h1>
-    <p>Browse lab programs with detailed explanation and examples</p>
+    <h1>Programming Examples</h1>
+    <p>Select a program topic to view code snippets</p>
   </div>
 
-  <!-- Content -->
   <div class="content">
 
-    <!-- Sidebar -->
     <div class="sidebar">
-      <h3>Program List</h3>
+      <h3>Programs</h3>
       <ul class="program-list">
-        <li class="active" onclick="loadProgram(0)">Hello World</li>
-        <li onclick="loadProgram(1)">Sum of Two Numbers</li>
-        <li onclick="loadProgram(2)">Factorial of a Number</li>
+        {% for p in programs %}
+        <li onclick="showProgram('{{ p.title }}', `{{ p.code_snippet }}`)">
+          {{ p.title }}
+        </li>
+        {% endfor %}
       </ul>
     </div>
 
-    <!-- Program Display -->
-    <div class="program-area">
-      <div class="program-title" id="programTitle"></div>
-
-      <pre id="programCode"></pre>
-
-      <div class="explanation">
-        <h4>Explanation</h4>
-        <p id="programExplanation"></p>
+    <div class="program-card">
+      <div class="program-title" id="programTitle">
+        Select a Program
       </div>
+      <pre id="programCode">Code will appear here...</pre>
     </div>
 
   </div>
 
-  <!-- Bottom Navigation -->
   <div class="bottom-nav">
-    <button onclick="goTo('home.html')">Home</button>
-    <button onclick="goTo('chat.html')">Chat</button>
-     <button class="active">Program</button>
-    <button onclick="goTo('quiz.html')">Quiz</button>
-    <button onclick="goTo('flashcard.html')">Cards</button>
-        <button onclick="goTo('Progress.html')">Progress</button>
+    <button onclick="goTo('/home')">Home</button>
+    <button onclick="goTo('/chat')">Chat</button>
+    <button class="active">Program</button>
+    <button onclick="goTo('/quiz')">Quiz</button>
+    <button onclick="goTo('/flashcard')">Cards</button>
+    <button onclick="goTo('/progress')">Progress</button>
   </div>
 
 </div>
 
 <script>
-const programs = [
-  {
-    title: "Hello World Program",
-    code:
-`public class HelloWorld {
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-    }
-}`,
-    explanation:
-      "This is the basic Java program. The main() method is the entry point of execution. System.out.println() prints text to the console."
-  },
-  {
-    title: "Sum of Two Numbers",
-    code:
-`import java.util.Scanner;
-
-public class Sum {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int a = sc.nextInt();
-        int b = sc.nextInt();
-        System.out.println(a + b);
-    }
-}`,
-    explanation:
-      "This program takes two integers as input using Scanner and prints their sum."
-  },
-  {
-    title: "Factorial of a Number",
-    code:
-`import java.util.Scanner;
-
-public class Factorial {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int fact = 1;
-
-        for(int i = 1; i <= n; i++) {
-            fact *= i;
-        }
-
-        System.out.println(fact);
-    }
-}`,
-    explanation:
-      "This program calculates the factorial of a number using a loop. Factorial is the product of all numbers from 1 to n."
-  }
-];
-
-const programTitle = document.getElementById("programTitle");
-const programCode = document.getElementById("programCode");
-const programExplanation = document.getElementById("programExplanation");
-const listItems = document.querySelectorAll(".program-list li");
-
-function loadProgram(index) {
-  listItems.forEach(li => li.classList.remove("active"));
-  listItems[index].classList.add("active");
-
-  programTitle.textContent = programs[index].title;
-  programCode.textContent = programs[index].code;
-  programExplanation.textContent = programs[index].explanation;
-}
-
 function goTo(page) {
   window.location.href = page;
 }
 
-function logout() {
-  alert("Logged out!");
+function showProgram(title, code) {
+  document.getElementById("programTitle").innerText = title;
+  document.getElementById("programCode").innerText = code;
 }
-
-loadProgram(0);
 </script>
 
 </body>
