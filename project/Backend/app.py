@@ -11,9 +11,8 @@ app = Flask(
 
 app.secret_key = "edubot_secret_key"
 
-
 # ======================================================
-# ================= STUDENT MODULE ======================
+# ================= STUDENT MODULE =====================
 # ======================================================
 
 @app.route("/")
@@ -48,8 +47,6 @@ def login_post():
 
     cursor.close()
     conn.close()
-
-    # 👇 better error handling (no styling change)
     return render_template("login.html", error="Incorrect Email or Password")
 
 
@@ -94,7 +91,7 @@ def home():
 
 
 # ======================================================
-# ================= QUIZ ===============================
+# ================= QUIZ MODULE ========================
 # ======================================================
 
 @app.route("/quiz")
@@ -105,7 +102,14 @@ def quiz():
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM quizzes")
+    #  show only assigned quizzes
+    cursor.execute("""
+        SELECT q.quiz_id, q.title
+        FROM quizzes q
+        JOIN student_quizzes sq ON q.quiz_id = sq.quiz_id
+        WHERE sq.student_id = %s
+    """, (session["student_id"],))
+
     quizzes = cursor.fetchall()
 
     cursor.close()
@@ -121,6 +125,28 @@ def start_quiz(quiz_id):
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
 
+    #  verify quiz access
+    cursor.execute("""
+        SELECT * FROM student_quizzes
+        WHERE student_id=%s AND quiz_id=%s
+    """, (session["student_id"], quiz_id))
+
+    if not cursor.fetchone():
+        cursor.close()
+        conn.close()
+        return redirect(url_for("quiz"))
+
+    #  prevent re-attempt
+    cursor.execute("""
+        SELECT * FROM results
+        WHERE student_id=%s AND quiz_id=%s
+    """, (session["student_id"], quiz_id))
+
+    if cursor.fetchone():
+        cursor.close()
+        conn.close()
+        return redirect(url_for("progress"))
+
     cursor.execute("SELECT * FROM quizzes WHERE quiz_id=%s", (quiz_id,))
     quiz = cursor.fetchone()
 
@@ -129,7 +155,6 @@ def start_quiz(quiz_id):
 
     cursor.close()
     conn.close()
-
     return render_template("start_quiz.html", quiz=quiz, questions=questions)
 
 
@@ -163,7 +188,7 @@ def submit_quiz(quiz_id):
     cursor.close()
     conn.close()
 
-    return f"✅ Quiz Submitted! Score: {score}"
+    return redirect(url_for("progress"))
 
 
 # ======================================================
@@ -283,6 +308,20 @@ def admin_logout():
 
 @app.route("/logout")
 def logout():
+    if "student_id" in session:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            UPDATE sessions
+            SET logout_time=%s
+            WHERE student_id=%s AND logout_time IS NULL
+        """, (datetime.now(), session["student_id"]))
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
     session.clear()
     return redirect(url_for("login"))
 
