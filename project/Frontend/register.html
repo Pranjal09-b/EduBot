@@ -76,9 +76,16 @@
 
   <!-- Flask-connected form -->
   <form id="registerForm" method="POST" action="{{ url_for('register_post') }}" autocomplete="off" novalidate>
-    <input type="text" id="username" name="username" placeholder="Enter Username" required />
+
+    <!-- Name -->
+    <input type="text" id="name" name="name" placeholder="Enter Full Name" required />
+
+    <!-- Email -->
     <input type="email" id="email" name="email" placeholder="Enter Email" required />
+
+    <!-- Password -->
     <input type="password" id="password" name="password" placeholder="Enter Password" required />
+
     <button type="submit">Register</button>
   </form>
 
@@ -94,13 +101,13 @@
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const username = form.username.value.trim();
+    const name = form.name.value.trim();
     const email = form.email.value.trim();
     const password = form.password.value;
 
-    if (!username) {
-      alert('Please enter a username.');
-      form.username.focus();
+    if (!name) {
+      alert('Please enter your full name.');
+      form.name.focus();
       return;
     }
 
@@ -124,10 +131,10 @@
     });
 
     if (response.redirected) {
-      alert(`Registered successfully!\nUsername: ${username}\nEmail: ${email}`);
+      alert(`Registered successfully!\nName: ${name}\nEmail: ${email}`);
       window.location.href = response.url;
     } else {
-      alert("Registration failed. Try again.");
+      alert("Registration failed. Email may already exist.");
     }
   });
 </script>
