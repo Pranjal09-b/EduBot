@@ -189,7 +189,7 @@ body {
           <p>Ask questions about Java concepts, syntax, and lab programs.</p>
         </div>
       </div>
-      <button onclick="goTo('chat.html')">Start chatting &gt;</button>
+<button onclick="goTo('/chat')">Start chatting &gt;</button>
     </div>
 
     <div class="card">
@@ -200,7 +200,7 @@ body {
           <p>Browse lab programs with detailed explanation and examples.</p>
         </div>
       </div>
-      <button onclick="goTo('program.html')">View explanation &gt;</button>
+    <button onclick="goTo('/program')">View explanation &gt;</button>
     </div>
 
     <div class="card">
@@ -211,7 +211,7 @@ body {
           <p>Review key concepts with interactive flashcards.</p>
         </div>
       </div>
-      <button onclick="goTo('flashcard.html')">Study cards &gt;</button>
+      <button onclick="goTo('/flashcard')">Study cards &gt;</button>
     </div>
 
     <div class="card">
@@ -222,8 +222,8 @@ body {
           <p>Test your knowledge with interactive quizzes.</p>
         </div>
       </div>
-      <button onclick="goTo('quiz.html')">Take quiz &gt;</button>
-    </div>
+     <button onclick="goTo('/quiz')">Take quiz &gt;</button>    
+   </div>
 
     <div class="card">
       <div class="card-left">
@@ -233,31 +233,31 @@ body {
           <p>Monitor your learning progress and achievements.</p>
         </div>
       </div>
-      <button onclick="goTo('progress.html')">View progress &gt;</button>
-    </div>
+    <button onclick="goTo('/progress')">View progress &gt;</button>    
+</div>
 
   </div>
 
   <!-- Bottom Nav -->
-  <div class="bottom-nav">
-    <button>Login</button>
-    <button class="active">Home</button>
-    <button onclick="goTo('chat.html')">Chat</button>
-    <button onclick="goTo('program.html')">Program</button>
-    <button onclick="goTo('quiz.html')">Quiz</button>
-    <button onclick="goTo('flashcard.html')">Cards</button>
-    <button onclick="goTo('Progress.html')">Progress</button>
-  </div>
+ <div class="bottom-nav">
+  <button class="active">Home</button>
+  <button onclick="goTo('/chat')">Chat</button>
+  <button onclick="goTo('/program')">Program</button>
+  <button onclick="goTo('/quiz')">Quiz</button>
+  <button onclick="goTo('/flashcard')">Cards</button>
+  <button onclick="goTo('/progress')">Progress</button>
+</div>
+
 
 </div>
 
 <script>
-function goTo(page) {
-  window.location.href = page;
+function goTo(route) {
+    window.location.href = route;
 }
 
 function logout() {
-  alert("Logged out!");
+    window.location.href = "/logout";
 }
 </script>
 
