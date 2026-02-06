@@ -28,6 +28,7 @@ body {
   padding: 28px 32px;
 }
 
+/* Header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -51,22 +52,54 @@ body {
   font-weight: 600;
 }
 
-.title {
-  margin: 20px 0;
+/* Flashcard Area */
+.card-wrapper {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
 }
 
 .flashcard {
-  background: #fafafa;
-  border: 1px solid #eee;
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 14px;
-  cursor: pointer;
-  transition: background 0.2s ease;
+  width: 520px;
+  height: 260px;
+  perspective: 1000px;
 }
 
-.flashcard:hover {
+.flashcard-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  transition: transform 0.7s;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.flashcard.flip .flashcard-inner {
+  transform: rotateY(180deg);
+}
+
+.flashcard-front,
+.flashcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px;
+}
+
+.flashcard-front {
   background: #f3eefc;
+  border: 1px solid #e1d5f7;
+}
+
+.flashcard-back {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  transform: rotateY(180deg);
 }
 
 .flashcard h3 {
@@ -75,25 +108,50 @@ body {
 }
 
 .flashcard p {
-  margin-top: 10px;
-  color: #444;
-  display: none;
-}
-
-.flashcard.show p {
-  display: block;
+  margin-top: 14px;
+  font-size: 16px;
+  color: #333;
 }
 
 .hint {
-  margin-top: 6px;
+  margin-top: 18px;
   font-size: 12px;
   color: #888;
 }
 
+/* Navigation */
+.nav {
+  margin-top: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav button {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background: #6f42c1;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nav button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.counter {
+  font-weight: 600;
+  color: #555;
+}
+
+/* Bottom Nav */
 .bottom-nav {
-  margin-top: 18px;
+  margin-top: 30px;
   border-top: 1px solid #eee;
-  padding-top: 12px;
+  padding-top: 14px;
   display: flex;
   justify-content: space-around;
 }
@@ -109,6 +167,10 @@ body {
 .bottom-nav .active {
   color: #6f42c1;
 }
+
+.hidden {
+  display: none;
+}
 </style>
 </head>
 
@@ -122,20 +184,40 @@ body {
     <button class="logout" onclick="window.location.href='/logout'">Logout</button>
   </div>
 
-  <!-- Title -->
-  <div class="title">
-    <h1>Flashcards</h1>
-    <p>Click a card to reveal the answer</p>
+  <!-- Flashcard -->
+  <div class="card-wrapper">
+
+    {% for card in flashcards %}
+    {% set parts = card.content.split('\nA:') %}
+    <div class="flashcard card-item {% if not loop.first %}hidden{% endif %}" data-index="{{ loop.index0 }}">
+      <div class="flashcard-inner">
+
+        <!-- Front -->
+        <div class="flashcard-front">
+          <h3>{{ card.topic }}</h3>
+          <p>{{ parts[0].replace('Q:', '') }}</p>
+          <div class="hint">Click to flip</div>
+        </div>
+
+        <!-- Back -->
+        <div class="flashcard-back">
+          <h3>Answer</h3>
+          <p>{{ parts[1] }}</p>
+          <div class="hint">Click to flip back</div>
+        </div>
+
+      </div>
+    </div>
+    {% endfor %}
+
   </div>
 
-  <!-- Flashcards -->
-  {% for card in flashcards %}
-  <div class="flashcard" onclick="this.classList.toggle('show')">
-    <h3>{{ card.topic }}</h3>
-    <p>{{ card.content }}</p>
-    <div class="hint">Tap to show / hide answer</div>
+  <!-- Navigation -->
+  <div class="nav">
+    <button id="prevBtn" onclick="prevCard()">⬅ Previous</button>
+    <div class="counter" id="counter">1 / {{ flashcards|length }}</div>
+    <button id="nextBtn" onclick="nextCard()">Next ➡</button>
   </div>
-  {% endfor %}
 
   <!-- Bottom Navigation -->
   <div class="bottom-nav">
@@ -150,9 +232,50 @@ body {
 </div>
 
 <script>
+let current = 0;
+const cards = document.querySelectorAll(".card-item");
+const counter = document.getElementById("counter");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+cards.forEach(card => {
+  card.addEventListener("click", () => {
+    card.classList.toggle("flip");
+  });
+});
+
+function updateUI() {
+  cards.forEach(c => {
+    c.classList.add("hidden");
+    c.classList.remove("flip");
+  });
+
+  cards[current].classList.remove("hidden");
+  counter.innerText = (current + 1) + " / " + cards.length;
+
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = current === cards.length - 1;
+}
+
+function nextCard() {
+  if (current < cards.length - 1) {
+    current++;
+    updateUI();
+  }
+}
+
+function prevCard() {
+  if (current > 0) {
+    current--;
+    updateUI();
+  }
+}
+
 function goTo(page) {
   window.location.href = page;
 }
+
+updateUI();
 </script>
 
 </body>
