@@ -20,7 +20,6 @@ body {
   min-height: 100vh;
 }
 
-/* App Container */
 .app {
   width: 900px;
   background: #ffffff;
@@ -29,7 +28,6 @@ body {
   padding: 30px 36px;
 }
 
-/* Header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -60,7 +58,6 @@ body {
   font-weight: 600;
 }
 
-/* Title */
 .title {
   text-align: center;
   margin: 30px 0 10px;
@@ -76,7 +73,6 @@ body {
   color: #555;
 }
 
-/* Feature Cards */
 .cards {
   margin-top: 30px;
   display: flex;
@@ -136,7 +132,6 @@ body {
   font-size: 14px;
 }
 
-/* Bottom Navigation */
 .bottom-nav {
   margin-top: 30px;
   border-top: 1px solid #eee;
@@ -164,7 +159,6 @@ body {
 
 <div class="app">
 
-  <!-- Header -->
   <div class="header">
     <div class="brand">
       <span>📘</span> EduBot
@@ -172,13 +166,11 @@ body {
     <button class="logout" onclick="logout()">Logout</button>
   </div>
 
-  <!-- Title -->
   <div class="title">
-    <h1>Java Lab Learning Hub</h1>
+    <h1>Welcome, {{ name }} 👋</h1>
     <p>Learn Java programming with interactive tools!</p>
   </div>
 
-  <!-- Feature Cards -->
   <div class="cards">
 
     <div class="card">
@@ -189,7 +181,7 @@ body {
           <p>Ask questions about Java concepts, syntax, and lab programs.</p>
         </div>
       </div>
-<button onclick="goTo('/chat')">Start chatting &gt;</button>
+      <button onclick="goTo('/chat')">Start chatting &gt;</button>
     </div>
 
     <div class="card">
@@ -200,7 +192,7 @@ body {
           <p>Browse lab programs with detailed explanation and examples.</p>
         </div>
       </div>
-    <button onclick="goTo('/program')">View explanation &gt;</button>
+      <button onclick="goTo('/program')">View explanation &gt;</button>
     </div>
 
     <div class="card">
@@ -222,8 +214,8 @@ body {
           <p>Test your knowledge with interactive quizzes.</p>
         </div>
       </div>
-     <button onclick="goTo('/quiz')">Take quiz &gt;</button>    
-   </div>
+      <button onclick="goTo('/quiz')">Take quiz &gt;</button>
+    </div>
 
     <div class="card">
       <div class="card-left">
@@ -233,31 +225,29 @@ body {
           <p>Monitor your learning progress and achievements.</p>
         </div>
       </div>
-    <button onclick="goTo('/progress')">View progress &gt;</button>    
-</div>
+      <button onclick="goTo('/progress')">View progress &gt;</button>
+    </div>
 
   </div>
 
-  <!-- Bottom Nav -->
- <div class="bottom-nav">
-  <button class="active">Home</button>
-  <button onclick="goTo('/chat')">Chat</button>
-  <button onclick="goTo('/program')">Program</button>
-  <button onclick="goTo('/quiz')">Quiz</button>
-  <button onclick="goTo('/flashcard')">Cards</button>
-  <button onclick="goTo('/progress')">Progress</button>
-</div>
-
+  <div class="bottom-nav">
+    <button class="active">Home</button>
+    <button onclick="goTo('/chat')">Chat</button>
+    <button onclick="goTo('/program')">Program</button>
+    <button onclick="goTo('/quiz')">Quiz</button>
+    <button onclick="goTo('/flashcard')">Cards</button>
+    <button onclick="goTo('/progress')">Progress</button>
+  </div>
 
 </div>
 
 <script>
 function goTo(route) {
-    window.location.href = route;
+  window.location.href = route;
 }
 
 function logout() {
-    window.location.href = "/logout";
+  window.location.href = "/logout";
 }
 </script>
 
