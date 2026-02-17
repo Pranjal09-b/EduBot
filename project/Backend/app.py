@@ -24,83 +24,155 @@ app.add_middleware(
 templates = Jinja2Templates(directory="../Frontend")
 
 # ======================================================
-# ================= TEST ===============================
-# ======================================================
-
-@app.get("/test")
-def test():
-    return {"message": "FastAPI is working!"}
-
-# ======================================================
-# ================= STUDENT AUTH =======================
+# ================= LANDING PAGE =======================
 # ======================================================
 
 @app.get("/", response_class=HTMLResponse)
-def login(request: Request):
+def root(request: Request):
+    student_name = request.session.get("student_name")
+    is_logged_in = request.session.get("role") == "student"
+
+    return templates.TemplateResponse(
+        "home.html",
+        {
+            "request": request,
+            "name": student_name,
+            "is_logged_in": is_logged_in
+        }
+    )
+
+# ======================================================
+# ================= LOGIN ==============================
+# ======================================================
+
+@app.get("/login", response_class=HTMLResponse)
+def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
+
 
 @app.post("/login")
 def login_post(
     request: Request,
+    role: str = Form(...),
     email: str = Form(...),
     password: str = Form(...)
 ):
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    cur = conn.cursor(dictionary=True)
 
-    cursor.execute(
-        "SELECT student_id, name, password_hash FROM students WHERE email=%s",
-        (email,)
-    )
-    student = cursor.fetchone()
+    # ========== ADMIN LOGIN ==========
+    if role == "admin":
+        cur.execute(
+            "SELECT admin_id, name, password_hash FROM admins WHERE email=%s",
+            (email,)
+        )
+        admin = cur.fetchone()
 
-    cursor.close()
+        if admin and check_password_hash(admin["password_hash"], password):
+            request.session.clear()
+            request.session["admin_id"] = admin["admin_id"]
+            request.session["admin_name"] = admin["name"]
+            request.session["role"] = "admin"
+
+            cur.close()
+            conn.close()
+            return RedirectResponse("/admin", status_code=303)
+
+    # ========== STUDENT LOGIN ==========
+    elif role == "student":
+        cur.execute(
+            "SELECT student_id, name, password_hash FROM students WHERE email=%s",
+            (email,)
+        )
+        student = cur.fetchone()
+
+        if student and check_password_hash(student["password_hash"], password):
+            request.session.clear()
+            request.session["student_id"] = student["student_id"]
+            request.session["student_name"] = student["name"]
+            request.session["role"] = "student"
+
+            cur.close()
+            conn.close()
+            return RedirectResponse("/", status_code=303)
+
+    cur.close()
     conn.close()
-
-    if student and check_password_hash(student["password_hash"], password):
-        request.session["student_id"] = student["student_id"]
-        request.session["student_name"] = student["name"]
-        return RedirectResponse("/home", status_code=303)
 
     return templates.TemplateResponse(
         "login.html",
-        {"request": request, "error": "Incorrect email or password"}
+        {"request": request, "error": "Invalid credentials"}
     )
 
+# ======================================================
+# ================= REGISTER ===========================
+# ======================================================
+
 @app.get("/register", response_class=HTMLResponse)
-def register(request: Request):
+def register_page(request: Request):
     return templates.TemplateResponse("register.html", {"request": request})
+
 
 @app.post("/register")
 def register_post(
     request: Request,
+    role: str = Form(...),
     name: str = Form(...),
     email: str = Form(...),
-    password: str = Form(...)
+    password: str = Form(...),
+    confirm_password: str = Form(...)
 ):
-    password_hash = generate_password_hash(password)
+    if len(name) < 3:
+        return templates.TemplateResponse(
+            "register.html",
+            {"request": request, "error": "Name must be at least 3 characters"}
+        )
+
+    if password != confirm_password:
+        return templates.TemplateResponse(
+            "register.html",
+            {"request": request, "error": "Passwords do not match"}
+        )
+
+    if len(password) < 6:
+        return templates.TemplateResponse(
+            "register.html",
+            {"request": request, "error": "Password must be at least 6 characters"}
+        )
 
     conn = get_connection()
-    cursor = conn.cursor()
+    cur = conn.cursor()
 
     try:
-        cursor.execute(
-            "INSERT INTO students (name, email, password_hash) VALUES (%s,%s,%s)",
-            (name, email, password_hash)
-        )
+        if role == "student":
+            cur.execute(
+                "INSERT INTO students (name, email, password_hash) VALUES (%s,%s,%s)",
+                (name, email, generate_password_hash(password))
+            )
+        elif role == "admin":
+            cur.execute(
+                "INSERT INTO admins (name, email, password_hash) VALUES (%s,%s,%s)",
+                (name, email, generate_password_hash(password))
+            )
+
         conn.commit()
+
     except:
-        cursor.close()
+        cur.close()
         conn.close()
         return templates.TemplateResponse(
             "register.html",
             {"request": request, "error": "Email already exists"}
         )
 
-    cursor.close()
+    cur.close()
     conn.close()
 
-    return RedirectResponse("/", status_code=303)
+    return RedirectResponse("/login", status_code=303)
+
+# ======================================================
+# ================= LOGOUT =============================
+# ======================================================
 
 @app.get("/logout")
 def logout(request: Request):
@@ -108,49 +180,100 @@ def logout(request: Request):
     return RedirectResponse("/", status_code=303)
 
 # ======================================================
-# ================= HOME ===============================
+# ================= STUDENT FEATURES ===================
 # ======================================================
 
-@app.get("/home", response_class=HTMLResponse)
-def home(request: Request):
-    if "student_id" not in request.session:
-        return RedirectResponse("/", status_code=303)
+def require_student(request: Request):
+    return request.session.get("role") == "student"
 
-    return templates.TemplateResponse(
-        "home.html",
-        {
-            "request": request,
-            "name": request.session["student_name"]
-        }
-    )
-
-# ======================================================
-# ================= CHAT ===============================
-# ======================================================
 
 @app.get("/chat", response_class=HTMLResponse)
-def chat(request: Request):
-    if "student_id" not in request.session:
-        return RedirectResponse("/", status_code=303)
+def chat_page(request: Request):
+    if not require_student(request):
+        return RedirectResponse("/login", status_code=303)
 
     return templates.TemplateResponse("chat.html", {"request": request})
 
-# ======================================================
-# ================= PROGRAMS ===========================
-# ======================================================
+from fastapi.responses import JSONResponse
 
-@app.get("/program", response_class=HTMLResponse)
-def program(request: Request):
-    if "student_id" not in request.session:
-        return RedirectResponse("/", status_code=303)
+@app.post("/ask")
+async def ask_question(request: Request):
+
+    if not require_student(request):
+        return JSONResponse({"reply": "Unauthorized"}, status_code=401)
+
+    data = await request.json()
+    message = data.get("message", "").lower()
+    student_id = request.session.get("student_id")
 
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    cur = conn.cursor()
 
-    cursor.execute("SELECT title, code_snippet FROM programs")
-    programs = cursor.fetchall()
+    # Get keywords
+    cur.execute("SELECT keyword, response FROM chatbot_keywords")
+    keywords = cur.fetchall()
 
-    cursor.close()
+    reply = "Sorry, I don't understand. Please try another question."
+
+    for keyword, response in keywords:
+        if keyword.lower() in message:
+            reply = response
+            break
+
+    # Save chat
+    cur.execute("""
+        INSERT INTO chat_messages (student_id, question, answer)
+        VALUES (%s, %s, %s)
+    """, (student_id, message, reply))
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return {"reply": reply}
+
+@app.get("/chat-history")
+def get_chat_history(request: Request):
+
+    if not require_student(request):
+        return JSONResponse({"error": "Unauthorized"}, status_code=401)
+
+    student_id = request.session.get("student_id")
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT question, answer 
+        FROM chat_messages
+        WHERE student_id = %s
+        ORDER BY created_at
+    """, (student_id,))
+
+    chats = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return {"chats": chats}
+
+
+@app.get("/program", response_class=HTMLResponse)
+def programs_page(request: Request):
+    if not require_student(request):
+        return RedirectResponse("/login", status_code=303)
+
+    conn = get_connection()
+    cur = conn.cursor(dictionary=True)
+
+    cur.execute("""
+        SELECT program_id, title, code_snippet
+        FROM programs
+        ORDER BY program_id DESC
+    """)
+    programs = cur.fetchall()
+
+    cur.close()
     conn.close()
 
     return templates.TemplateResponse(
@@ -158,44 +281,58 @@ def program(request: Request):
         {"request": request, "programs": programs}
     )
 
-# ======================================================
-# ================= QUIZ ===============================
-# ======================================================
 
 @app.get("/quiz", response_class=HTMLResponse)
-def quiz(request: Request):
-    if "student_id" not in request.session:
-        return RedirectResponse("/", status_code=303)
+def quiz_page(request: Request):
+    if not require_student(request):
+        return RedirectResponse("/login", status_code=303)
 
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    cur = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT quiz_id, title FROM quizzes")
-    quizzes = cursor.fetchall()
+    cur.execute("SELECT quiz_id, title FROM quizzes")
+    quizzes = cur.fetchall()
 
-    cursor.close()
+    cur.close()
     conn.close()
 
     return templates.TemplateResponse(
         "quiz.html",
         {"request": request, "quizzes": quizzes}
     )
-
 @app.get("/start_quiz/{quiz_id}", response_class=HTMLResponse)
 def start_quiz(request: Request, quiz_id: int):
-    if "student_id" not in request.session:
-        return RedirectResponse("/", status_code=303)
+
+    if request.session.get("role") != "student":
+        return RedirectResponse("/login", status_code=303)
 
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    cur = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM quizzes WHERE quiz_id=%s", (quiz_id,))
-    quiz = cursor.fetchone()
+    # Get quiz
+    cur.execute("SELECT title FROM quizzes WHERE quiz_id=%s", (quiz_id,))
+    quiz = cur.fetchone()
 
-    cursor.execute("SELECT * FROM questions WHERE quiz_id=%s", (quiz_id,))
-    questions = cursor.fetchall()
+    if not quiz:
+        cur.close()
+        conn.close()
+        return HTMLResponse("Quiz not found", status_code=404)
 
-    cursor.close()
+    # Get questions (FIXED COLUMN NAME)
+    cur.execute("""
+        SELECT question_id,
+               question_text,
+               option_a,
+               option_b,
+               option_c,
+               option_d
+        FROM questions
+        WHERE quiz_id=%s
+    """, (quiz_id,))
+
+    questions = cur.fetchall()
+
+    cur.close()
     conn.close()
 
     return templates.TemplateResponse(
@@ -203,26 +340,43 @@ def start_quiz(request: Request, quiz_id: int):
         {
             "request": request,
             "quiz": quiz,
-            "questions": questions
+            "questions": questions,
+            "quiz_id": quiz_id
         }
     )
-
-@app.post("/submit_quiz/{quiz_id}", response_class=HTMLResponse)
+@app.post("/submit_quiz/{quiz_id}")
 async def submit_quiz(request: Request, quiz_id: int):
-    if "student_id" not in request.session:
-        return RedirectResponse("/", status_code=303)
+
+    if request.session.get("role") != "student":
+        return RedirectResponse("/login", status_code=303)
 
     form = await request.form()
-    student_id = request.session["student_id"]
 
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    cur = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM questions WHERE quiz_id=%s", (quiz_id,))
-    questions = cursor.fetchall()
+    # Get quiz title
+    cur.execute("SELECT title FROM quizzes WHERE quiz_id=%s", (quiz_id,))
+    quiz = cur.fetchone()
+    quiz_title = quiz["title"] if quiz else "Quiz"
 
-    score = 0
+    # Get questions
+    cur.execute("""
+        SELECT question_id,
+               question_text,
+               option_a,
+               option_b,
+               option_c,
+               option_d,
+               correct_option
+        FROM questions
+        WHERE quiz_id=%s
+    """, (quiz_id,))
+
+    questions = cur.fetchall()
+
     results = []
+    score = 0
 
     for q in questions:
         selected = form.get(f"q{q['question_id']}")
@@ -233,51 +387,70 @@ async def submit_quiz(request: Request, quiz_id: int):
 
         results.append({
             "question": q["question_text"],
-            "selected": selected,
-            "correct": correct,
             "option_a": q["option_a"],
             "option_b": q["option_b"],
             "option_c": q["option_c"],
             "option_d": q["option_d"],
+            "selected": selected,
+            "correct": correct
         })
 
-    cursor2 = conn.cursor()
-    cursor2.execute(
-        "INSERT INTO results (student_id, quiz_id, score) VALUES (%s,%s,%s)",
-        (student_id, quiz_id, score)
-    )
-    conn.commit()
+    student_id = request.session["student_id"]
 
-    cursor2.close()
-    cursor.close()
+    # ✅ Save score
+    cur.execute("""
+        INSERT INTO results (student_id, quiz_id, score)
+        VALUES (%s, %s, %s)
+    """, (student_id, quiz_id, score))
+
+    # ✅ Log activity
+    cur.execute("""
+        INSERT INTO student_activity (student_id, activity_type, description)
+        VALUES (%s, 'quiz', %s)
+    """, (student_id, f"Completed {quiz_title} (Score: {score})"))
+
+    conn.commit()
+    cur.close()
     conn.close()
 
     return templates.TemplateResponse(
         "quiz_result.html",
         {
             "request": request,
-            "results": results,
             "score": score,
-            "total": len(questions)
+            "total": len(questions),
+            "results": results
         }
     )
 
-# ======================================================
-# ================= FLASHCARDS =========================
-# ======================================================
+
+
+
 
 @app.get("/flashcard", response_class=HTMLResponse)
-def flashcard(request: Request):
-    if "student_id" not in request.session:
-        return RedirectResponse("/", status_code=303)
+def flashcards(request: Request):
+
+    if not require_student(request):
+        return RedirectResponse("/login", status_code=303)
+
+    student_id = request.session["student_id"]
 
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    cur = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT topic, content FROM flashcards")
-    flashcards = cursor.fetchall()
+    # Get flashcards
+    cur.execute("SELECT flashcard_id, topic, content FROM flashcards")
+    flashcards = cur.fetchall()
 
-    cursor.close()
+    # ✅ Log activity (only once per visit)
+    cur.execute("""
+        INSERT INTO student_activity (student_id, activity_type, description)
+        VALUES (%s, 'flashcard', 'Viewed flashcards')
+    """, (student_id,))
+
+    conn.commit()
+
+    cur.close()
     conn.close()
 
     return templates.TemplateResponse(
@@ -285,81 +458,86 @@ def flashcard(request: Request):
         {"request": request, "flashcards": flashcards}
     )
 
-# ======================================================
-# ================= PROGRESS ===========================
-# ======================================================
+
 
 @app.get("/progress", response_class=HTMLResponse)
 def progress(request: Request):
-    if "student_id" not in request.session:
-        return RedirectResponse("/", status_code=303)
+
+    if not require_student(request):
+        return RedirectResponse("/login", status_code=303)
+
+    student_id = request.session["student_id"]
+    MAX_SCORE = 5
 
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    cur = conn.cursor(dictionary=True)
 
-    cursor.execute("""
-        SELECT quizzes.title, results.score
+    # Quizzes completed
+    cur.execute("""
+        SELECT COUNT(DISTINCT quiz_id) AS total
         FROM results
-        JOIN quizzes ON quizzes.quiz_id = results.quiz_id
-        WHERE results.student_id=%s
-    """, (request.session["student_id"],))
+        WHERE student_id=%s
+    """, (student_id,))
+    quizzes_completed = cur.fetchone()["total"]
 
-    progress = cursor.fetchall()
+    # Average score
+    cur.execute("""
+        SELECT COALESCE(AVG(score),0) AS avg_score
+        FROM results
+        WHERE student_id=%s
+    """, (student_id,))
+    avg_raw = cur.fetchone()["avg_score"]
+    avg_score = round((avg_raw / MAX_SCORE) * 100, 1) if avg_raw else 0
 
-    cursor.close()
+    # Perfect scores
+    cur.execute("""
+        SELECT COUNT(*) AS perfect
+        FROM results
+        WHERE student_id=%s AND score=%s
+    """, (student_id, MAX_SCORE))
+    perfect_scores = cur.fetchone()["perfect"]
+
+    # Course progress (example logic)
+    progress_percent = min(quizzes_completed * 20, 100)
+
+    # Recent activity
+    cur.execute("""
+        SELECT activity_type, description, created_at
+        FROM student_activity
+        WHERE student_id=%s
+        ORDER BY created_at DESC
+        LIMIT 5
+    """, (student_id,))
+    recent_activity = cur.fetchall()
+
+    cur.close()
     conn.close()
 
     return templates.TemplateResponse(
         "progress.html",
-        {"request": request, "progress": progress}
+        {
+            "request": request,
+            "quizzes_completed": quizzes_completed,
+            "avg_score": avg_score,
+            "perfect_scores": perfect_scores,
+            "progress_percent": progress_percent,
+            "recent_activity": recent_activity
+        }
     )
 
 # ======================================================
-# ================= ADMIN ==============================
+# ================= ADMIN PANEL ========================
 # ======================================================
 
 @app.get("/admin", response_class=HTMLResponse)
-def admin_login(request: Request):
-    return templates.TemplateResponse("admin_login.html", {"request": request})
-
-@app.post("/admin/login")
-def admin_login_post(
-    request: Request,
-    email: str = Form(...),
-    password: str = Form(...)
-):
-    conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
-
-    cursor.execute(
-        "SELECT admin_id, name, password_hash FROM admins WHERE email=%s",
-        (email,)
-    )
-    admin = cursor.fetchone()
-
-    cursor.close()
-    conn.close()
-
-    if admin and check_password_hash(admin["password_hash"], password):
-        request.session["admin_id"] = admin["admin_name"] = admin["name"]
-        return RedirectResponse("/admin/dashboard", status_code=303)
+def admin_page(request: Request):
+    if request.session.get("role") != "admin":
+        return RedirectResponse("/login", status_code=303)
 
     return templates.TemplateResponse(
-        "admin_login.html",
-        {"request": request, "error": "Invalid admin credentials"}
+        "admin.html",
+        {
+            "request": request,
+            "name": request.session["admin_name"]
+        }
     )
-
-@app.get("/admin/dashboard", response_class=HTMLResponse)
-def admin_dashboard(request: Request):
-    if "admin_id" not in request.session:
-        return RedirectResponse("/admin", status_code=303)
-
-    return templates.TemplateResponse(
-        "admin_dashboard.html",
-        {"request": request, "admin": request.session["admin_name"]}
-    )
-
-@app.get("/admin/logout")
-def admin_logout(request: Request):
-    request.session.clear()
-    return RedirectResponse("/admin", status_code=303)
