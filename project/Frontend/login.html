@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EduBot - Login</title>
+
+<style>
+  * { box-sizing: border-box; }
+
+  body, html {
+    height: 100%;
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background-color: #f4f6fb;
+    background-image:
+      radial-gradient(circle at 20% 20%, #d7d0f2 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, #c0d4f7 0%, transparent 40%),
+      linear-gradient(135deg, #eef1f8, #f9fafe);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container {
+    background-color: #ffffff;
+    border-radius: 22px;
+    padding: 36px 34px 42px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow:
+      0 30px 60px rgba(0, 0, 0, 0.12),
+      0 8px 20px rgba(112, 144, 216, 0.25);
+    text-align: center;
+  }
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-weight: 700;
+    font-size: 26px;
+    color: #2d2f45;
+  }
+
+  h2::after {
+    content: "Sign in to your EduBot account";
+    display: block;
+    margin-top: 6px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #6b7280;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  select {
+    width: 100%;
+    padding: 14px 16px;
+    margin: 14px 0 18px;
+    border: 1.5px solid #d4d8e6;
+    border-radius: 12px;
+    font-size: 15px;
+    background-color: #f9fafe;
+  }
+
+  input:focus, select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+    background-color: #ffffff;
+  }
+
+  button {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 15px 0;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
+  .register-link {
+    margin-top: 22px;
+    display: block;
+    font-size: 14px;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>EduBot - Login</h2>
+
+  <form id="loginForm" method="POST" action="/login" autocomplete="off">
+
+  <select name="role" required>
+    <option value="">Select Login Type</option>
+    <option value="admin">Admin Login</option>
+    <option value="student">Student Login</option>
+  </select>
+
+  <input type="email" name="email" placeholder="Enter Email" required />
+  <input type="password" name="password" placeholder="Enter Password" required minlength="6" />
+
+  <button type="submit">Login</button>
+</form>
+
+  <a href="/register" class="register-link">
+    Don’t have an account? Register
+  </a>
+</div>
+
+<script>
+const form = document.getElementById('loginForm');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const role = form.role.value;
+  const email = form.email.value.trim();
+  const password = form.password.value;
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!role) {
+    alert("Please select login type.");
+    return;
+  }
+
+  if (!emailRegex.test(email)) {
+    alert("Please enter a valid email address.");
+    return;
+  }
+
+  if (password.length < 6) {
+    alert("Password must be at least 6 characters.");
+    return;
+  }
+
+  const formData = new FormData(form);
+
+  const response = await fetch(form.action, {
+    method: "POST",
+    body: formData
+  });
+
+  if (response.redirected) {
+    window.location.href = response.url;
+  } else {
+    alert("Invalid credentials.");
+  }
+});
+</script>
+
+
+</body>
+</html>
