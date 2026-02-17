@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Start Quiz</title>
+
+<style>
+body{
+  margin:0;
+  background:#f0f2f5;
+  font-family:"Segoe UI";
+}
+.app{
+  width:900px;
+  margin:30px auto;
+  background:white;
+  border-radius:16px;
+  padding:25px;
+  box-shadow:0 8px 30px rgba(0,0,0,0.12);
+}
+h2{
+  color:#6f42c1;
+}
+.question-box{
+  margin-top:20px;
+  padding:15px;
+  border:1px solid #eee;
+  border-radius:12px;
+}
+label{
+  display:block;
+  margin-top:8px;
+}
+button{
+  margin-top:25px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:#6f42c1;
+  color:white;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<h2>{{ quiz.title }}</h2>
+
+<form method="POST" action="/submit_quiz/{{ quiz_id }}">
+
+
+  {% for q in questions %}
+  <div class="question-box">
+    <h3>{{ loop.index }}. {{ q.question_text }}</h3>
+
+    <label><input type="radio" name="q{{ q.question_id }}" value="A" required> {{ q.option_a }}</label>
+    <label><input type="radio" name="q{{ q.question_id }}" value="B"> {{ q.option_b }}</label>
+    <label><input type="radio" name="q{{ q.question_id }}" value="C"> {{ q.option_c }}</label>
+    <label><input type="radio" name="q{{ q.question_id }}" value="D"> {{ q.option_d }}</label>
+  </div>
+  {% endfor %}
+
+  <button type="submit">Submit Quiz</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

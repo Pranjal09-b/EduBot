@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Progress - EduBot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
+
+.app {
+  width: 100%;
+  max-width: 1000px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 30px 36px;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 16px;
+}
+
+.brand {
+  font-size: 22px;
+  font-weight: 700;
+  color: #6f42c1;
+}
+
+.logout {
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* TITLE */
+.title {
+  margin: 24px 0;
+}
+
+.title h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.title p {
+  margin-top: 6px;
+  color: #666;
+}
+
+/* STATS */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: #fafafa;
+  border-radius: 16px;
+  padding: 22px;
+  text-align: center;
+  border-left: 6px solid #6f42c1;
+}
+
+.stat-card h2 {
+  margin: 0;
+  font-size: 34px;
+  color: #6f42c1;
+}
+
+.stat-card p {
+  margin-top: 8px;
+  color: #555;
+  font-weight: 600;
+}
+
+/* PROGRESS BAR */
+.progress-section {
+  margin-bottom: 30px;
+}
+
+.progress-section h3 {
+  margin-bottom: 12px;
+}
+
+.progress-bar {
+  background: #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 14px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #6f42c1;
+  border-radius: 12px;
+  transition: width 0.4s ease;
+}
+
+.progress-text {
+  margin-top: 8px;
+  color: #555;
+  font-weight: 600;
+}
+
+/* ACTIVITY */
+.activity h3 {
+  margin-bottom: 14px;
+}
+
+.activity-item {
+  background: #fafafa;
+  padding: 14px 18px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+}
+
+.activity-icon {
+  font-size: 18px;
+  width: 24px;
+}
+
+/* EMPTY MESSAGE */
+.empty {
+  color: #888;
+  font-style: italic;
+  padding: 10px;
+}
+
+/* BOTTOM NAV */
+.bottom-nav {
+  margin-top: 30px;
+  border-top: 1px solid #eee;
+  padding-top: 14px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.bottom-nav button {
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #666;
+}
+
+.bottom-nav .active {
+  color: #6f42c1;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="brand">📈 EduBot Progress</div>
+    <button class="logout" onclick="window.location.href='/logout'">Logout</button>
+  </div>
+
+  <!-- TITLE -->
+  <div class="title">
+    <h1>Progress Tracker</h1>
+    <p>Monitor your learning progress and achievements</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-card">
+      <h2>{{ quizzes_completed }}</h2>
+      <p>Quizzes Completed</p>
+    </div>
+
+    <div class="stat-card">
+      <h2>{{ avg_score }}%</h2>
+      <p>Average Quiz Score</p>
+    </div>
+
+    <div class="stat-card">
+      <h2>{{ perfect_scores }}</h2>
+      <p>Perfect Scores</p>
+    </div>
+  </div>
+
+  <!-- COURSE PROGRESS -->
+  <div class="progress-section">
+    <h3>Overall Course Progress</h3>
+    <div class="progress-bar">
+      <div class="progress-fill" style="width: {{ progress_percent }}%;"></div>
+    </div>
+    <div class="progress-text">{{ progress_percent }}% Completed</div>
+  </div>
+
+  <!-- RECENT ACTIVITY -->
+  <div class="activity">
+  <h3>Recent Activity</h3>
+
+  {% if recent_activity and recent_activity|length > 0 %}
+    
+    {% for row in recent_activity %}
+      <div class="activity-item">
+
+        {% if row.activity_type == 'quiz' %}
+          <div class="activity-icon">✔️</div>
+
+        {% elif row.activity_type == 'flashcard' %}
+          <div class="activity-icon">📚</div>
+
+        {% elif row.activity_type == 'program' %}
+          <div class="activity-icon">💻</div>
+
+        {% else %}
+          <div class="activity-icon">📌</div>
+        {% endif %}
+
+        <div>
+          {{ row.description }}<br>
+          <small>{{ row.created_at.strftime("%d %b %Y %I:%M %p") }}</small>
+        </div>
+
+      </div>
+    {% endfor %}
+
+  {% else %}
+    <div class="empty">No recent activity yet.</div>
+  {% endif %}
+</div>
+
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <button onclick="goTo('/home')">Home</button>
+    <button onclick="goTo('/chat')">Chat</button>
+    <button onclick="goTo('/program')">Program</button>
+    <button onclick="goTo('/quiz')">Quiz</button>
+    <button onclick="goTo('/flashcard')">Cards</button>
+    <button class="active">Progress</button>
+  </div>
+
+</div>
+
+<script>
+function goTo(page) {
+  window.location.href = page;
+}
+</script>
+
+</body>
+</html>
