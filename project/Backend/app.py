@@ -28,6 +28,7 @@ templates = Jinja2Templates(directory="../Frontend")
 # ======================================================
 
 @app.get("/", response_class=HTMLResponse)
+@app.get("/home", response_class=HTMLResponse)
 def root(request: Request):
     student_name = request.session.get("student_name")
     is_logged_in = request.session.get("role") == "student"
@@ -40,6 +41,7 @@ def root(request: Request):
             "is_logged_in": is_logged_in
         }
     )
+
 
 # ======================================================
 # ================= LOGIN ==============================
@@ -122,7 +124,8 @@ def register_post(
     password: str = Form(...),
     confirm_password: str = Form(...)
 ):
-    if len(name) < 3:
+    # -------- VALIDATION --------
+    if len(name.strip()) < 3:
         return templates.TemplateResponse(
             "register.html",
             {"request": request, "error": "Name must be at least 3 characters"}
@@ -144,29 +147,48 @@ def register_post(
     cur = conn.cursor()
 
     try:
+        # -------- CHECK EMAIL FIRST (Better Practice) --------
+        if role == "student":
+            cur.execute("SELECT * FROM students WHERE email=%s", (email,))
+        elif role == "admin":
+            cur.execute("SELECT * FROM admins WHERE email=%s", (email,))
+        else:
+            return templates.TemplateResponse(
+                "register.html",
+                {"request": request, "error": "Invalid role selected"}
+            )
+
+        existing_user = cur.fetchone()
+        if existing_user:
+            return templates.TemplateResponse(
+                "register.html",
+                {"request": request, "error": "Email already exists"}
+            )
+
+        # -------- INSERT USER --------
         if role == "student":
             cur.execute(
                 "INSERT INTO students (name, email, password_hash) VALUES (%s,%s,%s)",
-                (name, email, generate_password_hash(password))
+                (name.strip(), email.strip(), generate_password_hash(password))
             )
-        elif role == "admin":
+        else:  # admin
             cur.execute(
                 "INSERT INTO admins (name, email, password_hash) VALUES (%s,%s,%s)",
-                (name, email, generate_password_hash(password))
+                (name.strip(), email.strip(), generate_password_hash(password))
             )
 
         conn.commit()
 
-    except:
-        cur.close()
-        conn.close()
+    except Exception as e:
+        print("Registration Error:", e)  # VERY IMPORTANT
         return templates.TemplateResponse(
             "register.html",
-            {"request": request, "error": "Email already exists"}
+            {"request": request, "error": "Something went wrong. Please try again."}
         )
 
-    cur.close()
-    conn.close()
+    finally:
+        cur.close()
+        conn.close()
 
     return RedirectResponse("/login", status_code=303)
 
@@ -524,6 +546,10 @@ def progress(request: Request):
             "recent_activity": recent_activity
         }
     )
+@app.get("/help", response_class=HTMLResponse)
+def help_page(request: Request):
+    return templates.TemplateResponse("help.html", {"request": request})
+
 
 # ======================================================
 # ================= ADMIN PANEL ========================
