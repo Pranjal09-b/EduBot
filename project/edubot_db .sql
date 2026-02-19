@@ -43,6 +43,57 @@ INSERT INTO `admins` (`admin_id`, `name`, `email`, `password_hash`, `created_at`
 (1, 'pranjal', 'admin@edubot.com', 'pbkdf2:sha256:260000$test$9a5d7b6b9b8c8bdf8e5b5cbe5c9c3f8f9b8a2bfa7fef6a8cbd', '2026-02-06 13:55:33');
 
 -- --------------------------------------------------------
+--
+-- Table structure for table `chatbot_keywords`
+--
+
+CREATE TABLE `chatbot_keywords` (
+  `keyword_id` bigint(20) UNSIGNED NOT NULL,
+  `keyword` varchar(100) NOT NULL,
+  `response` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `chatbot_keywords`
+--
+
+INSERT INTO `chatbot_keywords` (`keyword_id`, `keyword`, `response`) VALUES
+(1, 'java', 'Java is an object-oriented programming language.'),
+(2, 'main method', 'public static void main(String[] args) is the entry point.'),
+(3, 'oops', 'OOPS stands for Object-Oriented Programming System.'),
+(4, 'quiz', 'You can attempt quizzes from the Quiz section.'),
+(5, 'java', 'Java is an object-oriented programming language.'),
+(6, 'main method', 'public static void main(String[] args) is the entry point.'),
+(7, 'oops', 'OOPS stands for Object-Oriented Programming System.'),
+(8, 'quiz', 'You can attempt quizzes from the Quiz section.'),
+(9, 'java', 'Java is an object-oriented programming language.'),
+(10, 'main method', 'public static void main(String[] args) is the entry point.'),
+(11, 'oops', 'OOPS stands for Object-Oriented Programming System.'),
+(12, 'quiz', 'You can attempt quizzes from the Quiz section.');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chat_messages`
+--
+
+CREATE TABLE `chat_messages` (
+  `chat_id` bigint(20) UNSIGNED NOT NULL,
+  `student_id` int(11) NOT NULL,
+  `question` text NOT NULL,
+  `answer` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `chat_messages`
+--
+
+INSERT INTO `chat_messages` (`chat_id`, `student_id`, `question`, `answer`, `created_at`) VALUES
+(1, 9, 'what is oops', 'OOPS stands for Object-Oriented Programming System.', '2026-02-16 16:29:48');
+
+-- --------------------------------------------------------
+
 
 --
 -- Table structure for table `flashcards`
