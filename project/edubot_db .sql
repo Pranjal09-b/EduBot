@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 17, 2026 at 02:09 PM
+-- Generation Time: Feb 19, 2026 at 05:25 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -45,57 +45,6 @@ INSERT INTO `admins` (`admin_id`, `name`, `email`, `password_hash`, `created_at`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `chatbot_keywords`
---
-
-CREATE TABLE `chatbot_keywords` (
-  `keyword_id` bigint(20) UNSIGNED NOT NULL,
-  `keyword` varchar(100) NOT NULL,
-  `response` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `chatbot_keywords`
---
-
-INSERT INTO `chatbot_keywords` (`keyword_id`, `keyword`, `response`) VALUES
-(1, 'java', 'Java is an object-oriented programming language.'),
-(2, 'main method', 'public static void main(String[] args) is the entry point.'),
-(3, 'oops', 'OOPS stands for Object-Oriented Programming System.'),
-(4, 'quiz', 'You can attempt quizzes from the Quiz section.'),
-(5, 'java', 'Java is an object-oriented programming language.'),
-(6, 'main method', 'public static void main(String[] args) is the entry point.'),
-(7, 'oops', 'OOPS stands for Object-Oriented Programming System.'),
-(8, 'quiz', 'You can attempt quizzes from the Quiz section.'),
-(9, 'java', 'Java is an object-oriented programming language.'),
-(10, 'main method', 'public static void main(String[] args) is the entry point.'),
-(11, 'oops', 'OOPS stands for Object-Oriented Programming System.'),
-(12, 'quiz', 'You can attempt quizzes from the Quiz section.');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `chat_messages`
---
-
-CREATE TABLE `chat_messages` (
-  `chat_id` bigint(20) UNSIGNED NOT NULL,
-  `student_id` int(11) NOT NULL,
-  `question` text NOT NULL,
-  `answer` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `chat_messages`
---
-
-INSERT INTO `chat_messages` (`chat_id`, `student_id`, `question`, `answer`, `created_at`) VALUES
-(1, 9, 'what is oops', 'OOPS stands for Object-Oriented Programming System.', '2026-02-16 16:29:48');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `flashcards`
 --
 
@@ -113,7 +62,24 @@ CREATE TABLE `flashcards` (
 INSERT INTO `flashcards` (`flashcard_id`, `topic`, `content`, `created_by`) VALUES
 (1, 'OOP in Java', 'Q: Name any one OOP concept used in Java.\nA: Inheritance.', 1),
 (2, 'Java Basics', 'Q: Why is Java platform independent?\nA: Because Java code runs on JVM, not directly on OS.', 1),
-(3, 'OOP in Java', 'Q: What is a class?\nA: A blueprint for creating objects.', 1);
+(3, 'OOP in Java', 'Q: What is a class?\nA: A blueprint for creating objects.', 1),
+(4, 'Java Basics', 'Q: What is JVM?\nA: JVM stands for Java Virtual Machine. It runs Java bytecode and makes Java platform independent.', 1),
+(5, 'Java Basics', 'Q: What is JDK?\nA: JDK stands for Java Development Kit. It contains compiler and tools required to develop Java programs.', 1),
+(6, 'Java Basics', 'Q: What is JRE?\nA: JRE stands for Java Runtime Environment. It is used to run Java applications.', 1),
+(7, 'OOP in Java', 'Q: What is Encapsulation?\nA: Encapsulation is wrapping data and methods together inside a class.', 1),
+(8, 'OOP in Java', 'Q: What is Inheritance?\nA: Inheritance allows one class to acquire properties of another class.', 1),
+(9, 'OOP in Java', 'Q: What is Polymorphism?\nA: Polymorphism means many forms. It allows methods to behave differently.', 1),
+(10, 'OOP in Java', 'Q: What is Abstraction?\nA: Abstraction hides implementation details and shows only essential features.', 1),
+(11, 'Java Collections', 'Q: What is ArrayList?\nA: ArrayList is a resizable array implementation in Java.', 1),
+(12, 'Java Collections', 'Q: What is HashMap?\nA: HashMap stores data in key-value pairs.', 1),
+(13, 'Exception Handling', 'Q: What is Exception?\nA: Exception is an event that disrupts normal program flow.', 1),
+(14, 'Exception Handling', 'Q: What is try-catch block?\nA: It is used to handle exceptions in Java.', 1),
+(15, 'Python Basics', 'Q: What is Python?\nA: Python is a high-level, interpreted programming language.', 1),
+(16, 'Python Basics', 'Q: What is a list in Python?\nA: A list is a mutable sequence of elements enclosed in square brackets.', 1),
+(17, 'Python Basics', 'Q: What is a tuple?\nA: A tuple is an immutable sequence of elements.', 1),
+(18, 'Python OOP', 'Q: How do you define a class in Python?\nA: Using the class keyword.', 1),
+(19, 'Python OOP', 'Q: What is __init__ method?\nA: It is a constructor method that initializes object attributes.', 1),
+(20, 'File Handling', 'Q: How to open a file in Python?\nA: Using open() function with mode like \"r\" or \"w\".', 1);
 
 -- --------------------------------------------------------
 
@@ -302,10 +268,7 @@ INSERT INTO `results` (`result_id`, `student_id`, `quiz_id`, `score`, `created_a
 (7, 1, 1, 3, '2026-02-11 05:50:21'),
 (8, 1, 1, 2, '2026-02-11 05:50:21'),
 (9, 1, 1, 1, '2026-02-11 05:50:21'),
-(10, 1, 1, 1, '2026-02-11 05:50:21'),
-(12, 9, 1, 6, '2026-02-16 16:02:30'),
-(13, 9, 2, 5, '2026-02-16 16:13:37'),
-(14, 9, 3, 4, '2026-02-16 16:18:29');
+(10, 1, 1, 1, '2026-02-11 05:50:21');
 
 -- --------------------------------------------------------
 
@@ -328,9 +291,7 @@ CREATE TABLE `students` (
 INSERT INTO `students` (`student_id`, `name`, `email`, `password_hash`, `created_at`) VALUES
 (1, 'pranjal ashok borde', 'pranjal95@gmail.com', 'scrypt:32768:8:1$nIYmN5nntKt8aELH$65041087b3c1d3f3cbc5a16202828edfa8bc8bf58fb867389ad5fd7fbce5cc003c7b1368460408ae773cd972f9d9aea16cffb9c8497765d9a02d90ba1ca5b255', '2026-02-06 13:03:56'),
 (5, 'Sneha Ghule', 'sneha05@gmail.com', 'scrypt:32768:8:1$mQ57TV4Mow6AX0ND$ea9341b29393435e78c9fc543fcd2d1cba9c5eb34216673176a80db38d66c571c7af905959699f5b735c728bfb7fadc13b47e686e8e22cb482ed95861e565869', '2026-02-06 13:50:18'),
-(6, 'Tanisha Bhosale', 'tanisha02@gmail.com', 'scrypt:32768:8:1$z8EtaiMhsJjAnaQf$72fae1e3a0e58df543a162ab1c59664dec5978af75e7b78f79cfb76ea17da67093167b68b5a91b8e5bd17ee40203d29db0a87961e42de29a1de0d0cd6e64bde4', '2026-02-07 05:36:39'),
-(8, 'Pranjal Ashok Borde', 'pranjal09@gmail.com', 'scrypt:32768:8:1$r3ubOUKYMsNs6EIL$85ab786fb1763934108e3259be77c60253a083a7f72f2066482de8519dab3c0b2983948957c9f0f44aff3460b990e2a3df89427ce658f6d9621923709adb44c5', '2026-02-16 15:46:50'),
-(9, 'Tanvi Kamble', 'tanvi25@gmail.com', 'scrypt:32768:8:1$jonMZL2C7dREO6tY$d55a94ad4d59b2a6a8bab7f5db991aa3d4f1e4268db1757cf97c8f17d1000186e91a23bdd005865f9e88554ed8f6bc1554fe32367df39b49ef82c6936dc1381a', '2026-02-16 15:48:55');
+(6, 'Tanisha Bhosale', 'tanisha02@gmail.com', 'scrypt:32768:8:1$z8EtaiMhsJjAnaQf$72fae1e3a0e58df543a162ab1c59664dec5978af75e7b78f79cfb76ea17da67093167b68b5a91b8e5bd17ee40203d29db0a87961e42de29a1de0d0cd6e64bde4', '2026-02-07 05:36:39');
 
 -- --------------------------------------------------------
 
@@ -354,9 +315,7 @@ INSERT INTO `student_activity` (`activity_id`, `student_id`, `activity_type`, `d
 (1, 1, 'program', 'Practiced programming exercises', '2026-02-11 05:20:51'),
 (2, 1, 'quiz', 'Completed quiz (Score: 1)', '2026-02-11 05:21:04'),
 (3, 1, 'quiz', 'Completed quiz (Score: 1)', '2026-02-11 05:33:27'),
-(4, 1, 'program', 'Practiced programming exercises', '2026-02-11 05:48:01'),
-(5, 9, 'flashcard', 'Viewed flashcards', '2026-02-16 16:16:19'),
-(6, 9, 'quiz', 'Completed Python Fundamentals Quiz (Score: 4)', '2026-02-16 16:18:29');
+(4, 1, 'program', 'Practiced programming exercises', '2026-02-11 05:48:01');
 
 -- --------------------------------------------------------
 
@@ -386,19 +345,6 @@ INSERT INTO `student_quizzes` (`student_id`, `quiz_id`) VALUES
 ALTER TABLE `admins`
   ADD PRIMARY KEY (`admin_id`),
   ADD UNIQUE KEY `email` (`email`);
-
---
--- Indexes for table `chatbot_keywords`
---
-ALTER TABLE `chatbot_keywords`
-  ADD PRIMARY KEY (`keyword_id`);
-
---
--- Indexes for table `chat_messages`
---
-ALTER TABLE `chat_messages`
-  ADD PRIMARY KEY (`chat_id`),
-  ADD KEY `fk_chat_student` (`student_id`);
 
 --
 -- Indexes for table `flashcards`
@@ -476,22 +422,10 @@ ALTER TABLE `admins`
   MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `chatbot_keywords`
---
-ALTER TABLE `chatbot_keywords`
-  MODIFY `keyword_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
---
--- AUTO_INCREMENT for table `chat_messages`
---
-ALTER TABLE `chat_messages`
-  MODIFY `chat_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
 -- AUTO_INCREMENT for table `flashcards`
 --
 ALTER TABLE `flashcards`
-  MODIFY `flashcard_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `flashcard_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `flashcard_activity`
@@ -521,29 +455,23 @@ ALTER TABLE `quizzes`
 -- AUTO_INCREMENT for table `results`
 --
 ALTER TABLE `results`
-  MODIFY `result_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `result_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `student_activity`
 --
 ALTER TABLE `student_activity`
-  MODIFY `activity_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `activity_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `chat_messages`
---
-ALTER TABLE `chat_messages`
-  ADD CONSTRAINT `fk_chat_student` FOREIGN KEY (`student_id`) REFERENCES `students` (`student_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `flashcards`
