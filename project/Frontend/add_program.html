@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Program</title>
+</head>
+<body>
+
+<h2>Add New Program</h2>
+
+<form method="post" action="/admin/add_program">
+
+    Title:<br>
+    <input type="text" name="title" required><br><br>
+
+    Language:<br>
+    <input type="text" name="language" required><br><br>
+
+    Topic:<br>
+    <input type="text" name="topic"><br><br>
+
+    Keywords:<br>
+    <input type="text" name="keywords"><br><br>
+
+    Code:<br>
+    <textarea name="code_snippet" rows="10" cols="70" required></textarea><br><br>
+
+    <button type="submit">Add Program</button>
+
+</form>
+
+<br>
+<a href="/admin/programs">Back</a>
+
+</body>
+</html>
