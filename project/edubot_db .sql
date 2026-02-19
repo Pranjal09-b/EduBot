@@ -342,7 +342,7 @@ CREATE TABLE `students` (
 INSERT INTO `students` (`student_id`, `name`, `email`, `password_hash`, `created_at`) VALUES
 (1, 'pranjal ashok borde', 'pranjal95@gmail.com', 'scrypt:32768:8:1$nIYmN5nntKt8aELH$65041087b3c1d3f3cbc5a16202828edfa8bc8bf58fb867389ad5fd7fbce5cc003c7b1368460408ae773cd972f9d9aea16cffb9c8497765d9a02d90ba1ca5b255', '2026-02-06 13:03:56'),
 (5, 'Sneha Ghule', 'sneha05@gmail.com', 'scrypt:32768:8:1$mQ57TV4Mow6AX0ND$ea9341b29393435e78c9fc543fcd2d1cba9c5eb34216673176a80db38d66c571c7af905959699f5b735c728bfb7fadc13b47e686e8e22cb482ed95861e565869', '2026-02-06 13:50:18'),
-(6, 'Tanisha Bhosale', 'tanisha02@gmail.com', 'scrypt:32768:8:1$z8EtaiMhsJjAnaQf$72fae1e3a0e58df543a162ab1c59664dec5978af75e7b78f79cfb76ea17da67093167b68b5a91b8e5bd17ee40203d29db0a87961e42de29a1de0d0cd6e64bde4', '2026-02-07 05:36:39');
+(6, 'Tanisha Bhosale', 'tanisha02@gmail.com', 'scrypt:32768:8:1$z8EtaiMhsJjAnaQf$72fae1e3a0e58df543a162ab1c59664dec5978af75e7b78f79cfb76ea17da67093167b68b5a91b8e5bd17ee40203d29db0a87961e42de29a1de0d0cd6e64bde4', '2026-02-07 05:36:39'),
 (8, 'Pranjal Ashok Borde', 'pranjal09@gmail.com', 'scrypt:32768:8:1$r3ubOUKYMsNs6EIL$85ab786fb1763934108e3259be77c60253a083a7f72f2066482de8519dab3c0b2983948957c9f0f44aff3460b990e2a3df89427ce658f6d9621923709adb44c5', '2026-02-16 15:46:50'),
 (9, 'Tanvi Kamble', 'tanvi25@gmail.com', 'scrypt:32768:8:1$jonMZL2C7dREO6tY$d55a94ad4d59b2a6a8bab7f5db991aa3d4f1e4268db1757cf97c8f17d1000186e91a23bdd005865f9e88554ed8f6bc1554fe32367df39b49ef82c6936dc1381a', '2026-02-16 15:48:55');
 
