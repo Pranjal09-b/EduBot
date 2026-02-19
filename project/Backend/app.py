@@ -567,3 +567,234 @@ def admin_page(request: Request):
             "name": request.session["admin_name"]
         }
     )
+
+@app.post("/admin/login")
+def admin_login_post(
+    request: Request,
+    email: str = Form(...),
+    password: str = Form(...)
+):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT admin_id, name, password_hash FROM admins WHERE email=%s",
+        (email,)
+    )
+    admin = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    if admin and check_password_hash(admin["password_hash"], password):
+        request.session["admin_id"] = admin["admin_id"]
+        request.session["admin_name"] = admin["name"]
+        return RedirectResponse("/admin/dashboard", status_code=303)
+
+
+    return templates.TemplateResponse(
+        "admin_login.html",
+        {"request": request, "error": "Invalid admin credentials"}
+    )
+
+@app.get("/admin/dashboard", response_class=HTMLResponse)
+def admin_dashboard(request: Request):
+    if "admin_id" not in request.session:
+        return RedirectResponse("/admin", status_code=303)
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM quizzes")
+    total_quizzes = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM programs")
+    total_programs = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM flashcards")
+    total_flashcards = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM students")
+    total_students = cursor.fetchone()[0]
+
+    cursor.close()
+    conn.close()
+
+    return templates.TemplateResponse(
+        "admin_dashboard.html",
+        {
+            "request": request,
+            "admin": request.session["admin_name"],
+            "total_quizzes": total_quizzes,
+            "total_programs": total_programs,
+            "total_flashcards": total_flashcards,
+            "total_students": total_students
+        }
+    )
+
+
+@app.get("/admin/logout")
+def admin_logout(request: Request):
+    request.session.clear()
+    return RedirectResponse("/admin", status_code=303)
+
+#ADMIN LOGIC
+
+#Admin View Programs
+@app.get("/admin/programs", response_class=HTMLResponse)
+def admin_programs(request: Request):
+    if "admin_id" not in request.session:
+        return RedirectResponse("/admin", status_code=303)
+
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM programs")
+    programs = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return templates.TemplateResponse(
+        "admin_programs.html",
+        {"request": request, "programs": programs}
+    )
+
+# Admin Add Program
+@app.get("/admin/add_program", response_class=HTMLResponse)
+def add_program_page(request: Request):
+    if "admin_id" not in request.session:
+        return RedirectResponse("/admin", status_code=303)
+
+    return templates.TemplateResponse("add_program.html", {"request": request})
+
+
+@app.post("/admin/add_program")
+def add_program(
+    request: Request,
+    title: str = Form(...),
+    language: str = Form(...),
+    topic: str = Form(...),
+    keywords: str = Form(...),
+    code_snippet: str = Form(...)
+):
+    if "admin_id" not in request.session:
+        return RedirectResponse("/admin", status_code=303)
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO programs (title, language, topic, keywords, code_snippet, created_by)
+        VALUES (%s,%s,%s,%s,%s,%s)
+    """, (title, language, topic, keywords, code_snippet, request.session["admin_id"]))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return RedirectResponse("/admin/programs", status_code=303)
+
+# Admin Add Quiz
+@app.get("/admin/add_quiz", response_class=HTMLResponse)
+def add_quiz_page(request: Request):
+    if "admin_id" not in request.session:
+        return RedirectResponse("/admin", status_code=303)
+
+    return templates.TemplateResponse("add_quiz.html", {"request": request})
+
+
+@app.post("/admin/add_quiz")
+def add_quiz(
+    request: Request,
+    title: str = Form(...)
+):
+    if "admin_id" not in request.session:
+        return RedirectResponse("/admin", status_code=303)
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "INSERT INTO quizzes (title, created_by) VALUES (%s,%s)",
+        (title, request.session["admin_id"])
+    )
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return RedirectResponse("/admin/dashboard", status_code=303)
+
+# Admin add Question to Quiz
+@app.get("/admin/add_question/{quiz_id}", response_class=HTMLResponse)
+def add_question_page(request: Request, quiz_id: int):
+    if "admin_id" not in request.session:
+        return RedirectResponse("/admin", status_code=303)
+
+    return templates.TemplateResponse(
+        "add_question.html",
+        {"request": request, "quiz_id": quiz_id}
+    )
+
+
+@app.post("/admin/add_question/{quiz_id}")
+def add_question(
+    request: Request,
+    quiz_id: int,
+    question_text: str = Form(...),
+    correct_option: str = Form(...),
+    option_a: str = Form(...),
+    option_b: str = Form(...),
+    option_c: str = Form(...),
+    option_d: str = Form(...)
+):
+    if "admin_id" not in request.session:
+        return RedirectResponse("/admin", status_code=303)
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO questions 
+        (quiz_id, question_text, correct_option, option_a, option_b, option_c, option_d)
+        VALUES (%s,%s,%s,%s,%s,%s,%s)
+    """, (quiz_id, question_text, correct_option, option_a, option_b, option_c, option_d))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return RedirectResponse("/admin/dashboard", status_code=303)
+
+# Admin Add Flashcard
+@app.get("/admin/add_flashcard", response_class=HTMLResponse)
+def add_flashcard_page(request: Request):
+    if "admin_id" not in request.session:
+        return RedirectResponse("/admin", status_code=303)
+
+    return templates.TemplateResponse("add_flashcard.html", {"request": request})
+
+
+@app.post("/admin/add_flashcard")
+def add_flashcard(
+    request: Request,
+    topic: str = Form(...),
+    content: str = Form(...)
+):
+    if "admin_id" not in request.session:
+        return RedirectResponse("/admin", status_code=303)
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO flashcards (topic, content, created_by)
+        VALUES (%s,%s,%s)
+    """, (topic, content, request.session["admin_id"]))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return RedirectResponse("/admin/dashboard", status_code=303)
