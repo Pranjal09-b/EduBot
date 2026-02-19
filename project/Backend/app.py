@@ -1,3 +1,4 @@
+
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -59,52 +60,62 @@ def login_post(
     email: str = Form(...),
     password: str = Form(...)
 ):
+    # Clean inputs
+    role = role.strip().lower()
+    email = email.strip()
+
     conn = get_connection()
     cur = conn.cursor(dictionary=True)
 
-    # ========== ADMIN LOGIN ==========
-    if role == "admin":
-        cur.execute(
-            "SELECT admin_id, name, password_hash FROM admins WHERE email=%s",
-            (email,)
+    try:
+        # ========== ADMIN LOGIN ==========
+        if role == "admin":
+            cur.execute(
+                "SELECT admin_id, name, password_hash FROM admins WHERE email=%s",
+                (email,)
+            )
+            admin = cur.fetchone()
+
+            if admin and check_password_hash(admin["password_hash"], password):
+                request.session.clear()
+                request.session["admin_id"] = admin["admin_id"]
+                request.session["admin_name"] = admin["name"]
+                request.session["role"] = "admin"
+
+                return RedirectResponse("/admin", status_code=303)
+
+        # ========== STUDENT LOGIN ==========
+        elif role == "student":
+            cur.execute(
+                "SELECT student_id, name, password_hash FROM students WHERE email=%s",
+                (email,)
+            )
+            student = cur.fetchone()
+
+            if student and check_password_hash(student["password_hash"], password):
+                request.session.clear()
+                request.session["student_id"] = student["student_id"]
+                request.session["student_name"] = student["name"]
+                request.session["role"] = "student"
+
+                return RedirectResponse("/", status_code=303)
+
+        # If role invalid
+        else:
+            return templates.TemplateResponse(
+                "login.html",
+                {"request": request, "error": "Invalid role selected"}
+            )
+
+        # If credentials wrong
+        return templates.TemplateResponse(
+            "login.html",
+            {"request": request, "error": "Invalid credentials"}
         )
-        admin = cur.fetchone()
 
-        if admin and check_password_hash(admin["password_hash"], password):
-            request.session.clear()
-            request.session["admin_id"] = admin["admin_id"]
-            request.session["admin_name"] = admin["name"]
-            request.session["role"] = "admin"
-
-            cur.close()
-            conn.close()
-            return RedirectResponse("/admin", status_code=303)
-
-    # ========== STUDENT LOGIN ==========
-    elif role == "student":
-        cur.execute(
-            "SELECT student_id, name, password_hash FROM students WHERE email=%s",
-            (email,)
-        )
-        student = cur.fetchone()
-
-        if student and check_password_hash(student["password_hash"], password):
-            request.session.clear()
-            request.session["student_id"] = student["student_id"]
-            request.session["student_name"] = student["name"]
-            request.session["role"] = "student"
-
-            cur.close()
-            conn.close()
-            return RedirectResponse("/", status_code=303)
-
-    cur.close()
-    conn.close()
-
-    return templates.TemplateResponse(
-        "login.html",
-        {"request": request, "error": "Invalid credentials"}
-    )
+    finally:
+        cur.close()
+        conn.close()
 
 # ======================================================
 # ================= REGISTER ===========================
@@ -124,8 +135,13 @@ def register_post(
     password: str = Form(...),
     confirm_password: str = Form(...)
 ):
+    # Clean inputs
+    role = role.strip().lower()
+    name = name.strip()
+    email = email.strip()
+
     # -------- VALIDATION --------
-    if len(name.strip()) < 3:
+    if len(name) < 3:
         return templates.TemplateResponse(
             "register.html",
             {"request": request, "error": "Name must be at least 3 characters"}
@@ -147,40 +163,43 @@ def register_post(
     cur = conn.cursor()
 
     try:
-        # -------- CHECK EMAIL FIRST (Better Practice) --------
+        # -------- CHECK EMAIL FIRST --------
         if role == "student":
-            cur.execute("SELECT * FROM students WHERE email=%s", (email,))
+            cur.execute("SELECT 1 FROM students WHERE email=%s", (email,))
         elif role == "admin":
-            cur.execute("SELECT * FROM admins WHERE email=%s", (email,))
+            cur.execute("SELECT 1 FROM admins WHERE email=%s", (email,))
         else:
             return templates.TemplateResponse(
                 "register.html",
                 {"request": request, "error": "Invalid role selected"}
             )
 
-        existing_user = cur.fetchone()
-        if existing_user:
+        if cur.fetchone():
             return templates.TemplateResponse(
                 "register.html",
                 {"request": request, "error": "Email already exists"}
             )
 
         # -------- INSERT USER --------
+        password_hash = generate_password_hash(password)
+
         if role == "student":
             cur.execute(
                 "INSERT INTO students (name, email, password_hash) VALUES (%s,%s,%s)",
-                (name.strip(), email.strip(), generate_password_hash(password))
+                (name, email, password_hash)
             )
         else:  # admin
             cur.execute(
                 "INSERT INTO admins (name, email, password_hash) VALUES (%s,%s,%s)",
-                (name.strip(), email.strip(), generate_password_hash(password))
+                (name, email, password_hash)
             )
 
         conn.commit()
 
+        return RedirectResponse("/login", status_code=303)
+
     except Exception as e:
-        print("Registration Error:", e)  # VERY IMPORTANT
+        print("Registration Error:", e)
         return templates.TemplateResponse(
             "register.html",
             {"request": request, "error": "Something went wrong. Please try again."}
