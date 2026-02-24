@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ===== YOUR ORIGINAL CSS (UNCHANGED) ===== */
 * {
   box-sizing: border-box;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -15,20 +16,60 @@ body {
   margin: 0;
   background: #f0f2f5;
   min-height: 100vh;
+}
+
+.container {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  min-height: 100vh;
 }
 
-.app {
-  width: 900px;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-  padding: 28px 32px;
+.main-sidebar {
+  width: 220px;
+  background: #ffffff;
+  border-right: 1px solid #eee;
+  padding: 25px 18px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Header */
+.brand {
+  font-size: 20px;
+  font-weight: 700;
+  color: #6f42c1;
+  margin-bottom: 40px;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  padding: 12px 14px;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: 0.2s;
+}
+
+.nav-btn:hover {
+  background: #f3e8ff;
+  color: #6f42c1;
+}
+
+.nav-btn.active {
+  background: #6f42c1;
+  color: #fff;
+}
+
+.main {
+  flex: 1;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -37,32 +78,59 @@ body {
   padding-bottom: 16px;
 }
 
-.brand {
-  font-size: 20px;
-  font-weight: 700;
-  color: #6f42c1;
+.header h1 {
+  margin: 0;
+  font-size: 26px;
 }
 
 .logout {
-  border: 1px solid #ddd;
   padding: 8px 14px;
   border-radius: 8px;
+  border: 1px solid #ddd;
   background: #fff;
   cursor: pointer;
   font-weight: 600;
 }
 
-/* Flashcard Area */
 .card-wrapper {
-  margin-top: 30px;
   display: flex;
   justify-content: center;
+  margin-top: 40px;
+  padding: 70px 20px;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f8f5ff, #eef3ff);
+}
+
+.card-wrapper::before {
+  content: "";
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  background: rgba(111, 66, 193, 0.06);
+  border-radius: 50%;
+  top: -100px;
+  left: -100px;
+}
+
+.card-wrapper::after {
+  content: "";
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  background: rgba(0, 123, 255, 0.05);
+  border-radius: 50%;
+  bottom: -80px;
+  right: -80px;
 }
 
 .flashcard {
   width: 520px;
   height: 260px;
   perspective: 1000px;
+  position: relative;
+  z-index: 1;
 }
 
 .flashcard-inner {
@@ -72,6 +140,7 @@ body {
   transition: transform 0.7s;
   transform-style: preserve-3d;
   cursor: pointer;
+  position: relative;
 }
 
 .flashcard.flip .flashcard-inner {
@@ -89,6 +158,7 @@ body {
   flex-direction: column;
   justify-content: center;
   padding: 24px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
 .flashcard-front {
@@ -119,12 +189,12 @@ body {
   color: #888;
 }
 
-/* Navigation */
 .nav {
-  margin-top: 25px;
+  margin-top: 40px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 40px;
 }
 
 .nav button {
@@ -135,6 +205,11 @@ body {
   color: white;
   font-weight: 600;
   cursor: pointer;
+  transition: 0.2s;
+}
+
+.nav button:hover {
+  background: #5a32a3;
 }
 
 .nav button:disabled {
@@ -147,27 +222,6 @@ body {
   color: #555;
 }
 
-/* Bottom Nav */
-.bottom-nav {
-  margin-top: 30px;
-  border-top: 1px solid #eee;
-  padding-top: 14px;
-  display: flex;
-  justify-content: space-around;
-}
-
-.bottom-nav button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  color: #666;
-}
-
-.bottom-nav .active {
-  color: #6f42c1;
-}
-
 .hidden {
   display: none;
 }
@@ -176,16 +230,52 @@ body {
 
 <body>
 
-<div class="app">
+<div class="container">
 
-  <div class="header">
-    <div class="brand">📚 EduBot Flashcards</div>
-    <button class="logout" onclick="window.location.href='/logout'">Logout</button>
+  <div class="main-sidebar">
+    <div class="brand">📘 EduBot</div>
+
+    <button class="nav-btn" onclick="goTo('/home')">🏠 Home</button>
+    <button class="nav-btn" onclick="goTo('/chat')">💬 Chat</button>
+    <button class="nav-btn" onclick="goTo('/program')">💻 Program</button>
+    <button class="nav-btn" onclick="goTo('/quiz')">📝 Quiz</button>
+    <button class="nav-btn active">📚 Flashcards</button>
+    <button class="nav-btn" onclick="goTo('/progress')">📊 Progress</button>
+    <button class="nav-btn" onclick="goTo('/help')">❓ Help</button>
   </div>
 
-  <div class="card-wrapper">
+  <div class="main">
 
-    {% if flashcards %}
+    <div class="header">
+      <h1>Flashcards</h1>
+      <button class="logout" onclick="window.location.href='/logout'">Logout</button>
+    </div>
+
+    <!-- ===== TOPIC LIST VIEW ===== -->
+    {% if not selected_topic %}
+
+      <h2 style="margin-top:30px;">Available Flashcard Topics</h2>
+      <p>Choose a topic and start practicing</p>
+
+      {% for t in topics %}
+      <div style="background:#f3f3f3; padding:25px; border-radius:16px; margin-top:25px; box-shadow:0 4px 10px rgba(0,0,0,0.05);">
+        <h3>{{ t.topic }}</h3>
+        <a href="/flashcard?topic={{ t.topic }}"
+           style="color:#6f42c1; font-weight:600; text-decoration:none;">
+           View Flashcards →
+        </a>
+      </div>
+      {% endfor %}
+
+    {% endif %}
+
+    <!-- ===== FLASHCARD VIEW ===== -->
+    {% if selected_topic %}
+
+    <h2 style="margin-top:30px;">{{ selected_topic }} Flashcards</h2>
+
+    <div class="card-wrapper">
+
       {% for card in flashcards %}
       {% set parts = card.content.split('A:') %}
       <div class="flashcard card-item {% if not loop.first %}hidden{% endif %}">
@@ -199,37 +289,40 @@ body {
 
           <div class="flashcard-back">
             <h3>Answer</h3>
-            <p>{{ parts|length > 1 and parts[1] or 'Answer not available' }}</p>
+            <p>{{ parts[1] if parts|length > 1 else 'Answer not available' }}</p>
             <div class="hint">Click to flip back</div>
           </div>
 
         </div>
       </div>
       {% endfor %}
-    {% else %}
-      <p>No flashcards available.</p>
+
+    </div>
+
+    <div class="nav">
+      <button id="prevBtn" onclick="prevCard()">⬅ Previous</button>
+      <div class="counter" id="counter">1 / {{ flashcards|length }}</div>
+      <button id="nextBtn" onclick="nextCard()">Next ➡</button>
+    </div>
+
+    <div style="margin-top:20px;">
+      <a href="/flashcard" style="text-decoration:none; font-weight:600;">
+        ← Back to Topics
+      </a>
+    </div>
+
     {% endif %}
 
-  </div>
-
-  <div class="nav">
-    <button id="prevBtn" onclick="prevCard()">⬅ Previous</button>
-    <div class="counter" id="counter">1 / {{ flashcards|length }}</div>
-    <button id="nextBtn" onclick="nextCard()">Next ➡</button>
-  </div>
-
-  <div class="bottom-nav">
-    <button onclick="goTo('/home')">Home</button>
-    <button onclick="goTo('/chat')">Chat</button>
-    <button onclick="goTo('/program')">Program</button>
-    <button onclick="goTo('/quiz')">Quiz</button>
-    <button class="active">Cards</button>
-    <button onclick="goTo('/progress')">Progress</button>
   </div>
 
 </div>
 
 <script>
+function goTo(page) {
+  window.location.href = page;
+}
+
+{% if selected_topic %}
 let current = 0;
 const cards = document.querySelectorAll(".card-item");
 const counter = document.getElementById("counter");
@@ -256,13 +349,20 @@ function updateUI() {
   counter.innerText = (current + 1) + " / " + cards.length;
 
   prevBtn.disabled = current === 0;
-  nextBtn.disabled = current === cards.length - 1;
+
+  if (current === cards.length - 1) {
+    nextBtn.textContent = "Finish ✔";
+  } else {
+    nextBtn.textContent = "Next ➡";
+  }
 }
 
 function nextCard() {
   if (current < cards.length - 1) {
     current++;
     updateUI();
+  } else {
+    window.location.href = "/progress";
   }
 }
 
@@ -273,11 +373,8 @@ function prevCard() {
   }
 }
 
-function goTo(page) {
-  window.location.href = page;
-}
-
 updateUI();
+{% endif %}
 </script>
 
 </body>
