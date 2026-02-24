@@ -468,7 +468,7 @@ async def submit_quiz(request: Request, quiz_id: int):
 
 
 @app.get("/flashcard", response_class=HTMLResponse)
-def flashcards(request: Request):
+def flashcards(request: Request, topic: str = None):
 
     if not require_student(request):
         return RedirectResponse("/login", status_code=303)
@@ -478,24 +478,39 @@ def flashcards(request: Request):
     conn = get_connection()
     cur = conn.cursor(dictionary=True)
 
-    # Get flashcards
-    cur.execute("SELECT flashcard_id, topic, content FROM flashcards")
-    flashcards = cur.fetchall()
+    # ✅ Get all distinct topics
+    cur.execute("SELECT DISTINCT topic FROM flashcards")
+    topics = cur.fetchall()
 
-    # ✅ Log activity (only once per visit)
-    cur.execute("""
-        INSERT INTO student_activity (student_id, activity_type, description)
-        VALUES (%s, 'flashcard', 'Viewed flashcards')
-    """, (student_id,))
+    flashcards = []
 
-    conn.commit()
+    # ✅ If topic selected → filter
+    if topic:
+        cur.execute(
+            "SELECT flashcard_id, topic, content FROM flashcards WHERE topic=%s",
+            (topic,)
+        )
+        flashcards = cur.fetchall()
+
+        # Log activity when topic opened
+        cur.execute("""
+            INSERT INTO student_activity (student_id, activity_type, description)
+            VALUES (%s, 'flashcard', %s)
+        """, (student_id, f"Viewed {topic} flashcards"))
+
+        conn.commit()
 
     cur.close()
     conn.close()
 
     return templates.TemplateResponse(
         "flashcard.html",
-        {"request": request, "flashcards": flashcards}
+        {
+            "request": request,
+            "topics": topics,
+            "flashcards": flashcards,
+            "selected_topic": topic
+        }
     )
 
 
