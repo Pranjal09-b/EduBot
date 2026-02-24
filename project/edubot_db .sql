@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2026 at 02:30 PM
+-- Generation Time: Feb 24, 2026 at 03:02 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -171,7 +171,9 @@ CREATE TABLE `chat_messages` (
 --
 
 INSERT INTO `chat_messages` (`chat_id`, `student_id`, `question`, `answer`, `created_at`) VALUES
-(1, 9, 'what is oops', 'OOPS stands for Object-Oriented Programming System.', '2026-02-16 16:29:48');
+(1, 9, 'what is oops', 'OOPS stands for Object-Oriented Programming System.', '2026-02-16 16:29:48'),
+(0, 8, 'what is jvm', 'JVM (Java Virtual Machine) runs Java bytecode and makes Java platform independent.', '2026-02-24 13:39:32'),
+(0, 8, 'jdk?', 'JDK (Java Development Kit) includes JRE and development tools like compiler.', '2026-02-24 13:39:42');
 
 -- --------------------------------------------------------
 
@@ -191,26 +193,76 @@ CREATE TABLE `flashcards` (
 --
 
 INSERT INTO `flashcards` (`flashcard_id`, `topic`, `content`, `created_by`) VALUES
-(1, 'OOP in Java', 'Q: Name any one OOP concept used in Java.\nA: Inheritance.', 1),
-(2, 'Java Basics', 'Q: Why is Java platform independent?\nA: Because Java code runs on JVM, not directly on OS.', 1),
-(3, 'OOP in Java', 'Q: What is a class?\nA: A blueprint for creating objects.', 1),
-(4, 'Java Basics', 'Q: What is JVM?\nA: JVM stands for Java Virtual Machine. It runs Java bytecode and makes Java platform independent.', 1),
-(5, 'Java Basics', 'Q: What is JDK?\nA: JDK stands for Java Development Kit. It contains compiler and tools required to develop Java programs.', 1),
-(6, 'Java Basics', 'Q: What is JRE?\nA: JRE stands for Java Runtime Environment. It is used to run Java applications.', 1),
-(7, 'OOP in Java', 'Q: What is Encapsulation?\nA: Encapsulation is wrapping data and methods together inside a class.', 1),
-(8, 'OOP in Java', 'Q: What is Inheritance?\nA: Inheritance allows one class to acquire properties of another class.', 1),
-(9, 'OOP in Java', 'Q: What is Polymorphism?\nA: Polymorphism means many forms. It allows methods to behave differently.', 1),
-(10, 'OOP in Java', 'Q: What is Abstraction?\nA: Abstraction hides implementation details and shows only essential features.', 1),
-(11, 'Java Collections', 'Q: What is ArrayList?\nA: ArrayList is a resizable array implementation in Java.', 1),
-(12, 'Java Collections', 'Q: What is HashMap?\nA: HashMap stores data in key-value pairs.', 1),
-(13, 'Exception Handling', 'Q: What is Exception?\nA: Exception is an event that disrupts normal program flow.', 1),
-(14, 'Exception Handling', 'Q: What is try-catch block?\nA: It is used to handle exceptions in Java.', 1),
-(15, 'Python Basics', 'Q: What is Python?\nA: Python is a high-level, interpreted programming language.', 1),
-(16, 'Python Basics', 'Q: What is a list in Python?\nA: A list is a mutable sequence of elements enclosed in square brackets.', 1),
-(17, 'Python Basics', 'Q: What is a tuple?\nA: A tuple is an immutable sequence of elements.', 1),
-(18, 'Python OOP', 'Q: How do you define a class in Python?\nA: Using the class keyword.', 1),
-(19, 'Python OOP', 'Q: What is __init__ method?\nA: It is a constructor method that initializes object attributes.', 1),
-(20, 'File Handling', 'Q: How to open a file in Python?\nA: Using open() function with mode like \"r\" or \"w\".', 1);
+(1, 'Java Basics', 'Q: What is Java?\nA: Java is a high-level, object-oriented programming language.', 1),
+(2, 'Java Basics', 'Q: Who developed Java?\nA: Java was developed by James Gosling.', 1),
+(3, 'Java Basics', 'Q: What is JVM?\nA: JVM stands for Java Virtual Machine.', 1),
+(4, 'Java Basics', 'Q: What is JDK?\nA: JDK stands for Java Development Kit.', 1),
+(5, 'Java Basics', 'Q: What is JRE?\nA: JRE stands for Java Runtime Environment.', 1),
+(6, 'Java Basics', 'Q: What is bytecode?\nA: Bytecode is intermediate code executed by JVM.', 1),
+(7, 'Java Basics', 'Q: What is platform independence?\nA: Java runs on JVM so it works on any OS.', 1),
+(8, 'Java Basics', 'Q: What are primitive data types?\nA: int, float, double, char, boolean, byte, short, long.', 1),
+(9, 'Java Basics', 'Q: What is main method?\nA: main() is the entry point of Java program.', 1),
+(10, 'Java Basics', 'Q: What is class?\nA: A class is a blueprint for creating objects.', 1),
+(11, 'OOP in Java', 'Q: What is object?\nA: An object is an instance of a class.', 1),
+(12, 'OOP in Java', 'Q: What is inheritance?\nA: Inheritance allows one class to acquire properties of another.', 1),
+(13, 'OOP in Java', 'Q: What is encapsulation?\nA: Wrapping data and methods inside a class.', 1),
+(14, 'OOP in Java', 'Q: What is polymorphism?\nA: Ability of method to take many forms.', 1),
+(15, 'OOP in Java', 'Q: What is abstraction?\nA: Hiding internal details and showing functionality.', 1),
+(16, 'OOP in Java', 'Q: What is method overloading?\nA: Same method name with different parameters.', 1),
+(17, 'OOP in Java', 'Q: What is method overriding?\nA: Redefining parent method in child class.', 1),
+(18, 'OOP in Java', 'Q: What is constructor?\nA: Constructor initializes object values.', 1),
+(19, 'OOP in Java', 'Q: What is super keyword?\nA: super refers to parent class object.', 1),
+(20, 'OOP in Java', 'Q: What is this keyword?\nA: this refers to current object.', 1),
+(21, 'Java Collections', 'Q: What is Collection Framework?\nA: It is a set of classes and interfaces for storing objects.', 1),
+(22, 'Java Collections', 'Q: What is ArrayList?\nA: Resizable array implementation.', 1),
+(23, 'Java Collections', 'Q: What is LinkedList?\nA: Doubly linked list implementation.', 1),
+(24, 'Java Collections', 'Q: What is HashSet?\nA: Collection that does not allow duplicates.', 1),
+(25, 'Java Collections', 'Q: What is HashMap?\nA: Stores data in key-value pairs.', 1),
+(26, 'Java Collections', 'Q: Difference between List and Set?\nA: List allows duplicates, Set does not.', 1),
+(27, 'Java Collections', 'Q: What is Iterator?\nA: Used to traverse collection elements.', 1),
+(28, 'Java Collections', 'Q: What is TreeMap?\nA: Sorted map implementation.', 1),
+(29, 'Java Collections', 'Q: What is Comparable?\nA: Interface used for natural sorting.', 1),
+(30, 'Java Collections', 'Q: What is Comparator?\nA: Interface used for custom sorting.', 1),
+(31, 'Exception Handling', 'Q: What is Exception?\nA: Event that disrupts program flow.', 1),
+(32, 'Exception Handling', 'Q: What is try block?\nA: Contains risky code.', 1),
+(33, 'Exception Handling', 'Q: What is catch block?\nA: Handles exception.', 1),
+(34, 'Exception Handling', 'Q: What is finally block?\nA: Executes whether exception occurs or not.', 1),
+(35, 'Exception Handling', 'Q: What is throw keyword?\nA: Used to explicitly throw exception.', 1),
+(36, 'Exception Handling', 'Q: What is throws keyword?\nA: Declares exception.', 1),
+(37, 'Exception Handling', 'Q: What is checked exception?\nA: Checked at compile time.', 1),
+(38, 'Exception Handling', 'Q: What is unchecked exception?\nA: Occurs at runtime.', 1),
+(39, 'Exception Handling', 'Q: What is custom exception?\nA: User-defined exception class.', 1),
+(40, 'Exception Handling', 'Q: What is stack trace?\nA: List of method calls at exception time.', 1),
+(41, 'Multithreading', 'Q: What is thread?\nA: Lightweight subprocess.', 1),
+(42, 'Multithreading', 'Q: How to create thread?\nA: By extending Thread class or implementing Runnable.', 1),
+(43, 'Multithreading', 'Q: What is run() method?\nA: Contains thread execution code.', 1),
+(44, 'Multithreading', 'Q: What is sleep()?\nA: Pauses thread execution.', 1),
+(45, 'Multithreading', 'Q: What is synchronization?\nA: Controls access to shared resources.', 1),
+(46, 'Multithreading', 'Q: What is deadlock?\nA: Two threads waiting for each other.', 1),
+(47, 'Multithreading', 'Q: What is daemon thread?\nA: Background thread.', 1),
+(48, 'Multithreading', 'Q: What is join()?\nA: Waits for thread to finish.', 1),
+(49, 'Multithreading', 'Q: What is thread priority?\nA: Determines execution order.', 1),
+(50, 'Multithreading', 'Q: What is synchronized method?\nA: Method locked for one thread at a time.', 1),
+(51, 'JDBC', 'Q: What is JDBC?\nA: Java Database Connectivity API.', 1),
+(52, 'JDBC', 'Q: What is DriverManager?\nA: Manages database drivers.', 1),
+(53, 'JDBC', 'Q: What is Connection?\nA: Represents database connection.', 1),
+(54, 'JDBC', 'Q: What is Statement?\nA: Used to execute SQL queries.', 1),
+(55, 'JDBC', 'Q: What is PreparedStatement?\nA: Precompiled SQL statement.', 1),
+(56, 'JDBC', 'Q: What is ResultSet?\nA: Stores query results.', 1),
+(57, 'JDBC', 'Q: What is executeQuery()?\nA: Executes SELECT statement.', 1),
+(58, 'JDBC', 'Q: What is executeUpdate()?\nA: Executes INSERT, UPDATE, DELETE.', 1),
+(59, 'JDBC', 'Q: What is batch processing?\nA: Executes multiple queries together.', 1),
+(60, 'JDBC', 'Q: What is transaction management?\nA: Controls commit and rollback.', 1),
+(61, 'Java 8 Features', 'Q: What is Lambda expression?\nA: Anonymous function.', 1),
+(62, 'Java 8 Features', 'Q: What is Stream API?\nA: Used for processing collections.', 1),
+(63, 'Java 8 Features', 'Q: What is Functional Interface?\nA: Interface with single abstract method.', 1),
+(64, 'Java 8 Features', 'Q: What is default method?\nA: Method with body inside interface.', 1),
+(65, 'Java 8 Features', 'Q: What is Optional class?\nA: Prevents NullPointerException.', 1),
+(66, 'Java 8 Features', 'Q: What is forEach()?\nA: Iterates elements in collection.', 1),
+(67, 'Java 8 Features', 'Q: What is method reference?\nA: Shorter way of writing lambda.', 1),
+(68, 'Java 8 Features', 'Q: What is Predicate?\nA: Functional interface returning boolean.', 1),
+(69, 'Java 8 Features', 'Q: What is Consumer?\nA: Functional interface that accepts input.', 1),
+(70, 'Java 8 Features', 'Q: What is Supplier?\nA: Functional interface that supplies value.', 1);
 
 -- --------------------------------------------------------
 
@@ -448,7 +500,19 @@ INSERT INTO `student_activity` (`activity_id`, `student_id`, `activity_type`, `d
 (2, 1, 'quiz', 'Completed quiz (Score: 1)', '2026-02-11 05:21:04'),
 (3, 1, 'quiz', 'Completed quiz (Score: 1)', '2026-02-11 05:33:27'),
 (4, 1, 'program', 'Practiced programming exercises', '2026-02-11 05:48:01'),
-(5, 8, 'flashcard', 'Viewed flashcards', '2026-02-19 06:19:03');
+(5, 8, 'flashcard', 'Viewed flashcards', '2026-02-19 06:19:03'),
+(6, 8, 'flashcard', 'Viewed flashcards', '2026-02-24 13:38:05'),
+(7, 8, 'flashcard', 'Viewed flashcards', '2026-02-24 13:39:16'),
+(8, 8, 'flashcard', 'Viewed flashcards', '2026-02-24 13:39:54'),
+(9, 8, 'flashcard', 'Viewed flashcards', '2026-02-24 13:45:01'),
+(10, 8, 'flashcard', 'Viewed flashcards', '2026-02-24 13:45:08'),
+(11, 8, 'flashcard', 'Viewed OOP in Java flashcards', '2026-02-24 13:54:04'),
+(12, 8, 'flashcard', 'Viewed Java Basics flashcards', '2026-02-24 13:54:33'),
+(13, 8, 'flashcard', 'Viewed Python Basics flashcards', '2026-02-24 13:55:00'),
+(14, 8, 'flashcard', 'Viewed File Handling flashcards', '2026-02-24 13:55:10'),
+(15, 8, 'flashcard', 'Viewed Java Basics flashcards', '2026-02-24 14:01:03'),
+(16, 8, 'flashcard', 'Viewed Java 8 Features flashcards', '2026-02-24 14:01:25'),
+(17, 8, 'flashcard', 'Viewed Java Basics flashcards', '2026-02-24 14:01:45');
 
 -- --------------------------------------------------------
 
@@ -558,7 +622,7 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT for table `flashcards`
 --
 ALTER TABLE `flashcards`
-  MODIFY `flashcard_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `flashcard_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT for table `flashcard_activity`
@@ -600,7 +664,7 @@ ALTER TABLE `students`
 -- AUTO_INCREMENT for table `student_activity`
 --
 ALTER TABLE `student_activity`
-  MODIFY `activity_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `activity_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
