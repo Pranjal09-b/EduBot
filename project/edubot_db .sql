@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 19, 2026 at 05:25 AM
+-- Generation Time: Feb 24, 2026 at 02:30 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -40,9 +40,11 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`admin_id`, `name`, `email`, `password_hash`, `created_at`) VALUES
-(1, 'pranjal', 'admin@edubot.com', 'pbkdf2:sha256:260000$test$9a5d7b6b9b8c8bdf8e5b5cbe5c9c3f8f9b8a2bfa7fef6a8cbd', '2026-02-06 13:55:33');
+(1, 'pranjal', 'admin@edubot.com', 'pbkdf2:sha256:260000$test$9a5d7b6b9b8c8bdf8e5b5cbe5c9c3f8f9b8a2bfa7fef6a8cbd', '2026-02-06 13:55:33'),
+(5, 'Pranjal Borde', 'pranjal95@gmail.com', 'scrypt:32768:8:1$8hdeGtqbqydXjMPT$2308d757f796fc77dd052a050dabc48e5ec00b40690f0393c44151553ebad2359a39166746061d9a552d9da053b83e0b85986082cee96ec80738a781d393ec3d', '2026-02-24 12:40:51');
 
 -- --------------------------------------------------------
+
 --
 -- Table structure for table `chatbot_keywords`
 --
@@ -69,7 +71,86 @@ INSERT INTO `chatbot_keywords` (`keyword_id`, `keyword`, `response`) VALUES
 (9, 'java', 'Java is an object-oriented programming language.'),
 (10, 'main method', 'public static void main(String[] args) is the entry point.'),
 (11, 'oops', 'OOPS stands for Object-Oriented Programming System.'),
-(12, 'quiz', 'You can attempt quizzes from the Quiz section.');
+(12, 'quiz', 'You can attempt quizzes from the Quiz section.'),
+(13, 'class', 'A class is a blueprint used to create objects in Java.'),
+(14, 'object', 'An object is an instance of a class containing properties and methods.'),
+(15, 'inheritance', 'Inheritance allows one class to acquire properties and methods of another class.'),
+(16, 'polymorphism', 'Polymorphism allows methods to perform different tasks based on the object calling them.'),
+(17, 'encapsulation', 'Encapsulation is wrapping data and methods together inside a class.'),
+(18, 'abstraction', 'Abstraction hides implementation details and shows only essential features.'),
+(19, 'interface', 'An interface in Java is used to achieve abstraction and multiple inheritance.'),
+(20, 'abstract class', 'An abstract class cannot be instantiated and may contain abstract methods.'),
+(21, 'constructor', 'A constructor is a special method used to initialize objects.'),
+(22, 'exception handling', 'Exception handling in Java is done using try, catch, finally, throw, and throws.'),
+(23, 'try catch', 'The try block contains code that might throw an exception and catch handles it.'),
+(24, 'finally', 'The finally block always executes whether exception occurs or not.'),
+(25, 'multithreading', 'Multithreading allows concurrent execution of two or more threads.'),
+(26, 'thread', 'A thread is a lightweight subprocess that runs independently.'),
+(27, 'arraylist', 'ArrayList is a resizable array implementation of the List interface.'),
+(28, 'hashmap', 'HashMap stores data in key-value pairs and allows one null key.'),
+(29, 'collections', 'Java Collections Framework provides classes like List, Set, and Map.'),
+(30, 'string', 'String is a class in Java used to represent text. Strings are immutable.'),
+(31, 'stringbuilder', 'StringBuilder is used to create mutable strings.'),
+(32, 'jdbc', 'JDBC is used to connect and execute queries with databases in Java.'),
+(33, 'spring boot', 'Spring Boot is a framework used to build Java-based web applications easily.'),
+(34, 'servlet', 'A Servlet is a Java program that handles HTTP requests and responses.'),
+(35, 'jsp', 'JSP (Java Server Pages) is used to create dynamic web content.'),
+(36, 'garbage collection', 'Garbage Collection automatically removes unused objects from memory.'),
+(37, 'jvm', 'JVM (Java Virtual Machine) runs Java bytecode and makes Java platform independent.'),
+(38, 'jre', 'JRE (Java Runtime Environment) provides libraries and JVM to run Java programs.'),
+(39, 'jdk', 'JDK (Java Development Kit) includes JRE and development tools like compiler.'),
+(40, 'static keyword', 'The static keyword belongs to the class rather than objects.'),
+(41, 'final keyword', 'The final keyword is used to restrict inheritance, method overriding, or variable modification.'),
+(42, 'super keyword', 'The super keyword refers to the immediate parent class object.'),
+(43, 'this keyword', 'The this keyword refers to the current class object.'),
+(44, 'package', 'A package is used to group related classes and interfaces.'),
+(45, 'import', 'The import keyword is used to access classes from other packages.'),
+(46, 'access modifiers', 'Access modifiers define the visibility of classes, variables, and methods.'),
+(47, 'public', 'Public members are accessible from anywhere in the program.'),
+(48, 'private', 'Private members are accessible only within the same class.'),
+(49, 'protected', 'Protected members are accessible within the package and subclasses.'),
+(50, 'default access', 'Default access allows visibility only within the same package.'),
+(51, 'method overloading', 'Method overloading means multiple methods with the same name but different parameters.'),
+(52, 'method overriding', 'Method overriding allows a subclass to provide a specific implementation of a parent class method.'),
+(53, 'wrapper class', 'Wrapper classes convert primitive data types into objects.'),
+(54, 'autoboxing', 'Autoboxing automatically converts primitive types into wrapper class objects.'),
+(55, 'unboxing', 'Unboxing converts wrapper class objects back to primitive types.'),
+(56, 'enum', 'Enum is a special data type used to define collections of constants.'),
+(57, 'file handling', 'File handling in Java allows reading and writing data to files.'),
+(58, 'bufferedreader', 'BufferedReader is used to read text efficiently from input streams.'),
+(59, 'bufferedwriter', 'BufferedWriter is used to write text efficiently to output streams.'),
+(60, 'serialization', 'Serialization converts an object into a byte stream.'),
+(61, 'deserialization', 'Deserialization converts a byte stream back into an object.'),
+(62, 'lambda expression', 'Lambda expressions provide a clear and concise way to implement functional interfaces.'),
+(63, 'functional interface', 'A functional interface contains exactly one abstract method.'),
+(64, 'stream api', 'Stream API is used to process collections of objects in a functional style.'),
+(65, 'optional class', 'Optional is used to handle null values safely.'),
+(66, 'date api', 'Java Date and Time API provides classes to handle date and time.'),
+(67, 'localdate', 'LocalDate represents a date without time in Java.'),
+(68, 'localtime', 'LocalTime represents time without date in Java.'),
+(69, 'localdatetime', 'LocalDateTime represents both date and time.'),
+(70, 'comparable', 'Comparable interface is used to sort objects naturally.'),
+(71, 'comparator', 'Comparator interface is used to define custom sorting logic.'),
+(72, 'queue', 'Queue is a collection used to hold elements before processing.'),
+(73, 'priorityqueue', 'PriorityQueue orders elements according to their priority.'),
+(74, 'stack', 'Stack follows LIFO (Last In First Out) principle.'),
+(75, 'vector', 'Vector is a synchronized dynamic array.'),
+(76, 'iterator', 'Iterator is used to traverse collection elements.'),
+(77, 'foreach loop', 'For-each loop is used to iterate over arrays and collections.'),
+(78, 'switch statement', 'Switch statement selects execution path based on variable value.'),
+(79, 'ternary operator', 'Ternary operator is a shorthand for if-else statement.'),
+(80, 'break statement', 'Break statement exits from loop or switch.'),
+(81, 'continue statement', 'Continue skips current loop iteration.'),
+(82, 'synchronization', 'Synchronization controls access to shared resources in multithreading.'),
+(83, 'volatile keyword', 'Volatile ensures variable visibility across threads.'),
+(84, 'daemon thread', 'Daemon thread runs in background and stops when main thread ends.'),
+(85, 'executor service', 'ExecutorService manages thread execution in Java.'),
+(86, 'reflection', 'Reflection allows inspection of classes, methods, and fields at runtime.'),
+(87, 'annotations', 'Annotations provide metadata about program elements.'),
+(88, 'transient keyword', 'Transient prevents variable from being serialized.'),
+(89, 'instanceof', 'Instanceof checks whether an object belongs to a specific class.'),
+(90, 'inner class', 'Inner class is defined inside another class.'),
+(91, 'anonymous class', 'Anonymous class is a class without a name used for quick implementation.');
 
 -- --------------------------------------------------------
 
@@ -93,7 +174,6 @@ INSERT INTO `chat_messages` (`chat_id`, `student_id`, `question`, `answer`, `cre
 (1, 9, 'what is oops', 'OOPS stands for Object-Oriented Programming System.', '2026-02-16 16:29:48');
 
 -- --------------------------------------------------------
-
 
 --
 -- Table structure for table `flashcards`
@@ -343,8 +423,7 @@ INSERT INTO `students` (`student_id`, `name`, `email`, `password_hash`, `created
 (1, 'pranjal ashok borde', 'pranjal95@gmail.com', 'scrypt:32768:8:1$nIYmN5nntKt8aELH$65041087b3c1d3f3cbc5a16202828edfa8bc8bf58fb867389ad5fd7fbce5cc003c7b1368460408ae773cd972f9d9aea16cffb9c8497765d9a02d90ba1ca5b255', '2026-02-06 13:03:56'),
 (5, 'Sneha Ghule', 'sneha05@gmail.com', 'scrypt:32768:8:1$mQ57TV4Mow6AX0ND$ea9341b29393435e78c9fc543fcd2d1cba9c5eb34216673176a80db38d66c571c7af905959699f5b735c728bfb7fadc13b47e686e8e22cb482ed95861e565869', '2026-02-06 13:50:18'),
 (6, 'Tanisha Bhosale', 'tanisha02@gmail.com', 'scrypt:32768:8:1$z8EtaiMhsJjAnaQf$72fae1e3a0e58df543a162ab1c59664dec5978af75e7b78f79cfb76ea17da67093167b68b5a91b8e5bd17ee40203d29db0a87961e42de29a1de0d0cd6e64bde4', '2026-02-07 05:36:39'),
-(8, 'Pranjal Ashok Borde', 'pranjal09@gmail.com', 'scrypt:32768:8:1$r3ubOUKYMsNs6EIL$85ab786fb1763934108e3259be77c60253a083a7f72f2066482de8519dab3c0b2983948957c9f0f44aff3460b990e2a3df89427ce658f6d9621923709adb44c5', '2026-02-16 15:46:50'),
-(9, 'Tanvi Kamble', 'tanvi25@gmail.com', 'scrypt:32768:8:1$jonMZL2C7dREO6tY$d55a94ad4d59b2a6a8bab7f5db991aa3d4f1e4268db1757cf97c8f17d1000186e91a23bdd005865f9e88554ed8f6bc1554fe32367df39b49ef82c6936dc1381a', '2026-02-16 15:48:55');
+(8, 'Pranjal Borde', 'bordepranjal09@gmail.com', 'scrypt:32768:8:1$8osoAJDG0ZyhXnjK$7440fded47db48224530d4aa5d527f9b97069a902a2b06680b952ac87ba8489af3bd3e04544e74ed36c06a6487de280d512d34dc4790749e08380303ca0a0269', '2026-02-19 06:18:36');
 
 -- --------------------------------------------------------
 
@@ -368,7 +447,8 @@ INSERT INTO `student_activity` (`activity_id`, `student_id`, `activity_type`, `d
 (1, 1, 'program', 'Practiced programming exercises', '2026-02-11 05:20:51'),
 (2, 1, 'quiz', 'Completed quiz (Score: 1)', '2026-02-11 05:21:04'),
 (3, 1, 'quiz', 'Completed quiz (Score: 1)', '2026-02-11 05:33:27'),
-(4, 1, 'program', 'Practiced programming exercises', '2026-02-11 05:48:01');
+(4, 1, 'program', 'Practiced programming exercises', '2026-02-11 05:48:01'),
+(5, 8, 'flashcard', 'Viewed flashcards', '2026-02-19 06:19:03');
 
 -- --------------------------------------------------------
 
@@ -472,7 +552,7 @@ ALTER TABLE `student_quizzes`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `flashcards`
@@ -514,68 +594,13 @@ ALTER TABLE `results`
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `student_activity`
 --
 ALTER TABLE `student_activity`
-  MODIFY `activity_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `flashcards`
---
-ALTER TABLE `flashcards`
-  ADD CONSTRAINT `fk_flashcard_admin` FOREIGN KEY (`created_by`) REFERENCES `admins` (`admin_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `flashcard_activity`
---
-ALTER TABLE `flashcard_activity`
-  ADD CONSTRAINT `fk_flashcard_card` FOREIGN KEY (`flashcard_id`) REFERENCES `flashcards` (`flashcard_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_flashcard_student` FOREIGN KEY (`student_id`) REFERENCES `students` (`student_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `programs`
---
-ALTER TABLE `programs`
-  ADD CONSTRAINT `fk_program_admin` FOREIGN KEY (`created_by`) REFERENCES `admins` (`admin_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `questions`
---
-ALTER TABLE `questions`
-  ADD CONSTRAINT `fk_question_quiz` FOREIGN KEY (`quiz_id`) REFERENCES `quizzes` (`quiz_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `quizzes`
---
-ALTER TABLE `quizzes`
-  ADD CONSTRAINT `fk_quiz_admin` FOREIGN KEY (`created_by`) REFERENCES `admins` (`admin_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `results`
---
-ALTER TABLE `results`
-  ADD CONSTRAINT `fk_result_quiz` FOREIGN KEY (`quiz_id`) REFERENCES `quizzes` (`quiz_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_result_student` FOREIGN KEY (`student_id`) REFERENCES `students` (`student_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `student_activity`
---
-ALTER TABLE `student_activity`
-  ADD CONSTRAINT `fk_activity_student` FOREIGN KEY (`student_id`) REFERENCES `students` (`student_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `student_quizzes`
---
-ALTER TABLE `student_quizzes`
-  ADD CONSTRAINT `fk_sq_quiz` FOREIGN KEY (`quiz_id`) REFERENCES `quizzes` (`quiz_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_sq_student` FOREIGN KEY (`student_id`) REFERENCES `students` (`student_id`) ON DELETE CASCADE;
+  MODIFY `activity_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
