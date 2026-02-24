@@ -82,8 +82,7 @@ def login_post(
                 request.session["admin_name"] = admin["name"]
                 request.session["role"] = "admin"
 
-                return RedirectResponse("/admin", status_code=303)
-
+            return RedirectResponse("/admin/dashboard", status_code=303)
         # ========== STUDENT LOGIN ==========
         elif role == "student":
             cur.execute(
@@ -575,47 +574,6 @@ def help_page(request: Request):
 # ================= ADMIN PANEL ========================
 # ======================================================
 
-@app.get("/admin", response_class=HTMLResponse)
-def admin_page(request: Request):
-    if request.session.get("role") != "admin":
-        return RedirectResponse("/login", status_code=303)
-
-    return templates.TemplateResponse(
-        "admin.html",
-        {
-            "request": request,
-            "name": request.session["admin_name"]
-        }
-    )
-
-@app.post("/admin/login")
-def admin_login_post(
-    request: Request,
-    email: str = Form(...),
-    password: str = Form(...)
-):
-    conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
-
-    cursor.execute(
-        "SELECT admin_id, name, password_hash FROM admins WHERE email=%s",
-        (email,)
-    )
-    admin = cursor.fetchone()
-
-    cursor.close()
-    conn.close()
-
-    if admin and check_password_hash(admin["password_hash"], password):
-        request.session["admin_id"] = admin["admin_id"]
-        request.session["admin_name"] = admin["name"]
-        return RedirectResponse("/admin/dashboard", status_code=303)
-
-
-    return templates.TemplateResponse(
-        "admin_login.html",
-        {"request": request, "error": "Invalid admin credentials"}
-    )
 
 @app.get("/admin/dashboard", response_class=HTMLResponse)
 def admin_dashboard(request: Request):
