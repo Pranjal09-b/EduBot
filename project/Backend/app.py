@@ -307,10 +307,12 @@ def programs_page(request: Request):
     cur = conn.cursor(dictionary=True)
 
     cur.execute("""
-        SELECT program_id, title, code_snippet
+        SELECT program_id, title, topic, language,
+               code_snippet, explanation
         FROM programs
-        ORDER BY program_id DESC
+        ORDER BY program_id ASC
     """)
+
     programs = cur.fetchall()
 
     cur.close()
