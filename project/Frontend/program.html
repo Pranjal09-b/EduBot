@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -15,33 +14,70 @@ body {
   margin: 0;
   background: #f0f2f5;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-.app {
-  width: 900px;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-  padding: 28px 32px;
+/* MAIN LAYOUT */
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* LEFT SIDEBAR (MAIN NAVIGATION) */
+.main-sidebar {
+  width: 220px;
+  background: #ffffff;
+  border-right: 1px solid #eee;
+  padding: 25px 18px;
   display: flex;
   flex-direction: column;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 16px;
 }
 
 .brand {
   font-size: 20px;
   font-weight: 700;
   color: #6f42c1;
+  margin-bottom: 40px;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  padding: 12px 14px;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: 0.2s;
+}
+
+.nav-btn:hover {
+  background: #f3e8ff;
+  color: #6f42c1;
+}
+
+.nav-btn.active {
+  background: #6f42c1;
+  color: #fff;
+}
+
+/* MAIN CONTENT */
+.main {
+  flex: 1;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 16px;
 }
 
 .logout {
@@ -53,6 +89,7 @@ body {
   font-weight: 600;
 }
 
+/* TITLE */
 .title {
   margin: 24px 0 18px;
 }
@@ -67,6 +104,7 @@ body {
   color: #555;
 }
 
+/* PROGRAM CONTENT LAYOUT */
 .content {
   display: grid;
   grid-template-columns: 240px 1fr;
@@ -74,6 +112,7 @@ body {
   flex: 1;
 }
 
+/* INNER PROGRAM SIDEBAR */
 .sidebar {
   border-right: 1px solid #eee;
   padding-right: 12px;
@@ -101,6 +140,7 @@ body {
   background: #f1e4ff;
 }
 
+/* PROGRAM CARD */
 .program-card {
   background: #fff;
   border-radius: 14px;
@@ -121,74 +161,75 @@ pre {
   border-radius: 10px;
   overflow-x: auto;
 }
-
-.bottom-nav {
-  margin-top: 18px;
-  border-top: 1px solid #eee;
-  padding-top: 12px;
-  display: flex;
-  justify-content: space-around;
-}
-
-.bottom-nav button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  color: #666;
-}
-
-.bottom-nav .active {
-  color: #6f42c1;
-}
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="container">
 
-  <div class="header">
-    <div class="brand">💻 EduBot Programs</div>
-    <button class="logout" onclick="window.location.href='/logout'">Logout</button>
+  <!-- LEFT MAIN SIDEBAR -->
+  <div class="main-sidebar">
+    <div class="brand">📘 EduBot</div>
+
+    <button class="nav-btn" onclick="goTo('/home')">🏠 Home</button>
+    <button class="nav-btn" onclick="goTo('/chat')">💬 Chat</button>
+    <button class="nav-btn active">💻 Program</button>
+    <button class="nav-btn" onclick="goTo('/quiz')">📝 Quiz</button>
+    <button class="nav-btn" onclick="goTo('/flashcard')">📚 Cards</button>
+    <button class="nav-btn" onclick="goTo('/progress')">📊 Progress</button>
+    <button class="nav-btn" onclick="goTo('/help')">❓ Help</button>
   </div>
 
-  <div class="title">
-    <h1>Programming Examples</h1>
-    <p>Select a program topic to view code snippets</p>
-  </div>
+  <!-- MAIN CONTENT -->
+  <div class="main">
 
-  <div class="content">
-
-    <div class="sidebar">
-      <h3>Programs</h3>
-      <ul class="program-list">
-        {% for p in programs %}
-        <li onclick="showProgram('{{ p.title }}', `{{ p.code_snippet }}`)">
-          {{ p.title }}
-        </li>
-        {% endfor %}
-      </ul>
+    <!-- Header -->
+    <div class="header">
+      <button class="logout" onclick="window.location.href='/logout'">Logout</button>
     </div>
 
-    <div class="program-card">
-      <div class="program-title" id="programTitle">
-        Select a Program
+    <!-- Title -->
+    <div class="title">
+      <h1>Programming Examples</h1>
+      <p>Select a program topic to view code snippets</p>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- Program List Sidebar -->
+      <div class="sidebar">
+        <h3>Programs</h3>
+        <ul class="program-list">
+          {% for p in programs %}
+<li 
+  data-title="{{ p.title }}"
+  data-code="{{ p.code_snippet | e }}"
+  data-explanation="{{ p.explanation | e }}"
+  onclick="showProgram(this)">
+  {{ p.title }}
+</li>
+{% endfor %}
+
+        </ul>
       </div>
-      <pre id="programCode">Code will appear here...</pre>
+
+      <!-- Program Display Card -->
+      <div class="program-card">
+        <div class="program-title" id="programTitle">
+          Select a Program
+        </div>
+        <pre id="programCode">Code will appear here...</pre>
+         <div class="explanation-section">
+        <h3>Explanation:</h3>
+        <p id="programExplanation">Explanation will appear here...</p>
+        </div>
+      </div>
+
     </div>
 
   </div>
-
-  <div class="bottom-nav">
-    <button onclick="goTo('/home')">Home</button>
-    <button onclick="goTo('/chat')">Chat</button>
-    <button class="active">Program</button>
-    <button onclick="goTo('/quiz')">Quiz</button>
-    <button onclick="goTo('/flashcard')">Cards</button>
-    <button onclick="goTo('/progress')">Progress</button>
-  </div>
-
 </div>
 
 <script>
@@ -196,11 +237,18 @@ function goTo(page) {
   window.location.href = page;
 }
 
-function showProgram(title, code) {
+function showProgram(element) {
+  const title = element.getAttribute("data-title");
+  const code = element.getAttribute("data-code");
+  const explanation = element.getAttribute("data-explanation");
+
   document.getElementById("programTitle").innerText = title;
   document.getElementById("programCode").innerText = code;
+  document.getElementById("programExplanation").innerText = explanation;
 }
 </script>
+
+
 
 </body>
 </html>
