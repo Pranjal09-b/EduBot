@@ -14,39 +14,74 @@
 body {
   margin: 0;
   background: #f0f2f5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
 }
 
-.app {
-  width: 900px;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-  padding: 30px 36px;
-}
-
-.header {
+/* MAIN LAYOUT */
+.container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 16px;
+  min-height: 100vh;
 }
 
-.brand {
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: #ffffff;
+  border-right: 1px solid #eee;
+  padding: 25px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar .brand {
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: 20px;
   font-weight: 700;
   color: #6f42c1;
+  margin-bottom: 40px;
 }
 
-.brand span {
+.sidebar .brand span {
   font-size: 26px;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  padding: 12px 14px;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: 0.2s;
+}
+
+.nav-btn:hover {
+  background: #f3e8ff;
+  color: #6f42c1;
+}
+
+.nav-btn.active {
+  background: #6f42c1;
+  color: #fff;
+}
+
+/* MAIN CONTENT */
+.main {
+  flex: 1;
+  padding: 30px 40px;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .logout {
@@ -63,6 +98,7 @@ body {
   background: #f3f3f3;
 }
 
+/* TITLE */
 .title {
   text-align: center;
   margin: 30px 0 10px;
@@ -78,6 +114,7 @@ body {
   color: #555;
 }
 
+/* CARDS */
 .cards {
   margin-top: 30px;
   display: flex;
@@ -93,6 +130,7 @@ body {
   justify-content: space-between;
   align-items: center;
   transition: all 0.2s ease;
+  background: #fff;
 }
 
 .card:hover {
@@ -140,166 +178,143 @@ body {
 .card button:hover {
   text-decoration: underline;
 }
-
-.bottom-nav {
-  margin-top: 30px;
-  border-top: 1px solid #eee;
-  padding-top: 14px;
-  display: flex;
-  justify-content: space-around;
-  font-size: 14px;
-}
-
-.bottom-nav button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  color: #666;
-}
-
-.bottom-nav button:hover {
-  color: #6f42c1;
-}
-
-.bottom-nav .active {
-  color: #6f42c1;
-}
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="container">
 
-  <!-- HEADER -->
-  <div class="header">
+  <!-- LEFT SIDEBAR -->
+  <div class="sidebar">
     <div class="brand">
       <span>📘</span> EduBot
     </div>
 
+    <button class="nav-btn active">🏠 Home</button>
+
     {% if is_logged_in %}
-      <button class="logout" onclick="logout()">Logout</button>
+      <button class="nav-btn" onclick="goTo('/chat')">💬 Chat</button>
+      <button class="nav-btn" onclick="goTo('/program')">💻 Program</button>
+      <button class="nav-btn" onclick="goTo('/quiz')">📝 Quiz</button>
+      <button class="nav-btn" onclick="goTo('/flashcard')">📚 Cards</button>
+      <button class="nav-btn" onclick="goTo('/progress')">📊 Progress</button>
+      <button class="nav-btn" onclick="goTo('/help')">❓ Help</button>
     {% else %}
-      <button class="logout" onclick="goTo('/login')">Login</button>
+      <button class="nav-btn" onclick="mustLogin()">💬 Chat</button>
+      <button class="nav-btn" onclick="mustLogin()">📘 Program</button>
+      <button class="nav-btn" onclick="mustLogin()">📝 Quiz</button>
+      <button class="nav-btn" onclick="mustLogin()">📚 Cards</button>
+      <button class="nav-btn" onclick="mustLogin()">📊 Progress</button>
     {% endif %}
   </div>
 
-  <!-- TITLE -->
-  <div class="title">
-    {% if is_logged_in %}
-      <h1>Welcome, {{ name }} 👋</h1>
-      <p>Continue your Java learning journey!</p>
-    {% else %}
-      <h1>Welcome to EduBot 👋</h1>
-      <p>Learn Java programming with interactive tools!</p>
-    {% endif %}
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- HEADER -->
+    <div class="header">
+      {% if is_logged_in %}
+        <button class="logout" onclick="logout()">Logout</button>
+      {% else %}
+        <button class="logout" onclick="goTo('/login')">Login</button>
+      {% endif %}
+    </div>
+
+    <!-- TITLE -->
+    <div class="title">
+      {% if is_logged_in %}
+        <h1>Welcome, {{ name }} 👋</h1>
+        <p>Continue your Java learning journey!</p>
+      {% else %}
+        <h1>Welcome to EduBot 👋</h1>
+        <p>Learn Java programming with interactive tools!</p>
+      {% endif %}
+    </div>
+
+    <!-- CARDS -->
+    <div class="cards">
+
+      <div class="card">
+        <div class="card-left">
+          <div class="icon">💬</div>
+          <div>
+            <h3>Q & A Chatbot</h3>
+            <p>Ask questions about Java concepts, syntax, and lab programs.</p>
+          </div>
+        </div>
+        {% if is_logged_in %}
+          <button onclick="goTo('/chat')">Start chatting ></button>
+        {% else %}
+          <button onclick="mustLogin()">Login to access ></button>
+        {% endif %}
+      </div>
+
+      <div class="card">
+        <div class="card-left">
+          <div class="icon">📘</div>
+          <div>
+            <h3>Java Programs</h3>
+            <p>Browse lab programs with detailed explanation and examples.</p>
+          </div>
+        </div>
+        {% if is_logged_in %}
+          <button onclick="goTo('/program')">View explanation ></button>
+        {% else %}
+          <button onclick="mustLogin()">Login to access ></button>
+        {% endif %}
+      </div>
+
+      <div class="card">
+        <div class="card-left">
+          <div class="icon">📝</div>
+          <div>
+            <h3>Practice Quiz</h3>
+            <p>Test your knowledge with interactive quizzes.</p>
+          </div>
+        </div>
+        {% if is_logged_in %}
+          <button onclick="goTo('/quiz')">Take quiz ></button>
+        {% else %}
+          <button onclick="mustLogin()">Login to access ></button>
+        {% endif %}
+      </div>
+      
+      <div class="card">
+        <div class="card-left">
+          <div class="icon">📖</div>
+          <div>
+            <h3>Flashcards</h3>
+            <p>Review key concepts with interactive flashcards.</p>
+          </div>
+        </div>
+        {% if is_logged_in %}
+          <button onclick="goTo('/flashcard')">Study cards ></button>
+        {% else %}
+          <button onclick="mustLogin()">Login to access ></button>
+        {% endif %}
+      </div>
+
+
+
+      <div class="card">
+        <div class="card-left">
+          <div class="icon">📊</div>
+          <div>
+            <h3>Progress Tracker</h3>
+            <p>Monitor your learning progress and achievements.</p>
+          </div>
+        </div>
+        {% if is_logged_in %}
+          <button onclick="goTo('/progress')">View progress ></button>
+        {% else %}
+          <button onclick="mustLogin()">Login to access ></button>
+        {% endif %}
+      </div>
+
+    </div>
+
   </div>
-
-  <!-- CARDS -->
-  <div class="cards">
-
-    <!-- CHAT -->
-    <div class="card">
-      <div class="card-left">
-        <div class="icon">💬</div>
-        <div>
-          <h3>Q & A Chatbot</h3>
-          <p>Ask questions about Java concepts, syntax, and lab programs.</p>
-        </div>
-      </div>
-      {% if is_logged_in %}
-        <button onclick="goTo('/chat')">Start chatting &gt;</button>
-      {% else %}
-        <button onclick="mustLogin()">Login to access &gt;</button>
-      {% endif %}
-    </div>
-
-    <!-- PROGRAM -->
-    <div class="card">
-      <div class="card-left">
-        <div class="icon">📘</div>
-        <div>
-          <h3>Java Programs</h3>
-          <p>Browse lab programs with detailed explanation and examples.</p>
-        </div>
-      </div>
-      {% if is_logged_in %}
-        <button onclick="goTo('/program')">View explanation &gt;</button>
-      {% else %}
-        <button onclick="mustLogin()">Login to access &gt;</button>
-      {% endif %}
-    </div>
-
-    <!-- FLASHCARD -->
-    <div class="card">
-      <div class="card-left">
-        <div class="icon">📖</div>
-        <div>
-          <h3>Flashcards</h3>
-          <p>Review key concepts with interactive flashcards.</p>
-        </div>
-      </div>
-      {% if is_logged_in %}
-        <button onclick="goTo('/flashcard')">Study cards &gt;</button>
-      {% else %}
-        <button onclick="mustLogin()">Login to access &gt;</button>
-      {% endif %}
-    </div>
-
-    <!-- QUIZ -->
-    <div class="card">
-      <div class="card-left">
-        <div class="icon">📝</div>
-        <div>
-          <h3>Practice Quiz</h3>
-          <p>Test your knowledge with interactive quizzes.</p>
-        </div>
-      </div>
-      {% if is_logged_in %}
-        <button onclick="goTo('/quiz')">Take quiz &gt;</button>
-      {% else %}
-        <button onclick="mustLogin()">Login to access &gt;</button>
-      {% endif %}
-    </div>
-
-    <!-- PROGRESS -->
-    <div class="card">
-      <div class="card-left">
-        <div class="icon">📊</div>
-        <div>
-          <h3>Progress Tracker</h3>
-          <p>Monitor your learning progress and achievements.</p>
-        </div>
-      </div>
-      {% if is_logged_in %}
-        <button onclick="goTo('/progress')">View progress &gt;</button>
-      {% else %}
-        <button onclick="mustLogin()">Login to access &gt;</button>
-      {% endif %}
-    </div>
-
-  </div>
-
-  <!-- BOTTOM NAV -->
-  <div class="bottom-nav">
-    <button class="active">Home</button>
-
-    {% if is_logged_in %}
-      <button onclick="goTo('/chat')">Chat</button>
-      <button onclick="goTo('/program')">Program</button>
-      <button onclick="goTo('/quiz')">Quiz</button>
-      <button onclick="goTo('/flashcard')">Cards</button>
-      <button onclick="goTo('/progress')">Progress</button>
-    {% else %}
-      <button onclick="mustLogin()">Chat</button>
-      <button onclick="mustLogin()">Program</button>
-      <button onclick="mustLogin()">Quiz</button>
-      <button onclick="mustLogin()">Cards</button>
-      <button onclick="mustLogin()">Progress</button>
-    {% endif %}
-  </div>
-
 </div>
 
 <script>
