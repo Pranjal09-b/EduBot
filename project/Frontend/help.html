@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EduBot - Help</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f0f2f5;
+  min-height: 100vh;
+}
+
+/* MAIN LAYOUT */
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.main-sidebar {
+  width: 220px;
+  background: #ffffff;
+  border-right: 1px solid #eee;
+  padding: 25px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  font-size: 20px;
+  font-weight: 700;
+  color: #6f42c1;
+  margin-bottom: 40px;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  padding: 12px 14px;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: 0.2s;
+}
+
+.nav-btn:hover {
+  background: #f3e8ff;
+  color: #6f42c1;
+}
+
+.nav-btn.active {
+  background: #6f42c1;
+  color: #fff;
+}
+
+/* MAIN CONTENT */
+.main {
+  flex: 1;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 16px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.logout {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* SUBTITLE */
+.subtitle {
+  color: #666;
+  margin: 20px 0 30px;
+}
+
+/* HELP CARDS */
+.help-section {
+  background: #ffffff;
+  padding: 20px 22px;
+  border-radius: 14px;
+  margin-bottom: 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  border-top: 4px solid #6f42c1;
+  transition: 0.3s;
+}
+
+.help-section:hover {
+  transform: translateY(-4px);
+}
+
+.help-section h2 {
+  margin-top: 0;
+  color: #6f42c1;
+  font-size: 18px;
+}
+
+.help-section ul {
+  padding-left: 18px;
+  margin-top: 10px;
+}
+
+.help-section li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #444;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- SIDEBAR -->
+  <div class="main-sidebar">
+    <div class="brand">📘 EduBot</div>
+
+    <button class="nav-btn" onclick="goTo('/home')">🏠 Home</button>
+    <button class="nav-btn" onclick="goTo('/chat')">💬 Chat</button>
+    <button class="nav-btn" onclick="goTo('/program')">💻 Program</button>
+    <button class="nav-btn" onclick="goTo('/quiz')">📝 Quiz</button>
+    <button class="nav-btn" onclick="goTo('/flashcard')">📚 Flashcards</button>
+    <button class="nav-btn" onclick="goTo('/progress')">📊 Progress</button>
+    <button class="nav-btn active">❓ Help</button>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <div class="header">
+      <h1>Help & Guide</h1>
+      <button class="logout" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="subtitle">
+      Learn how to use Chat, Programs, Quiz, Flashcards and Progress features effectively 🚀
+    </div>
+
+    <div class="help-section">
+      <h2>💬 Chat Module</h2>
+      <ul>
+        <li>Go to the Chat page from sidebar.</li>
+        <li>Type your programming or theory question.</li>
+        <li>Click <strong>Send</strong> or press Enter.</li>
+        <li>Bot replies instantly below your message.</li>
+        <li>Your chat history loads automatically.</li>
+      </ul>
+    </div>
+
+    <div class="help-section">
+      <h2>💻 Programs Module</h2>
+      <ul>
+        <li>Open the Program page.</li>
+        <li>Select a programming topic.</li>
+        <li>View code examples with explanations.</li>
+        <li>Practice the code in your local editor.</li>
+      </ul>
+    </div>
+
+    <div class="help-section">
+      <h2>📝 Quiz Module</h2>
+      <ul>
+        <li>Navigate to the Quiz page.</li>
+        <li>Select a topic to attempt questions.</li>
+        <li>Choose correct answers carefully.</li>
+        <li>Submit quiz to see your score instantly.</li>
+        <li>Scores are stored for progress tracking.</li>
+      </ul>
+    </div>
+
+    <div class="help-section">
+      <h2>🧠 Flashcards Module</h2>
+      <ul>
+        <li>Go to Flashcards section.</li>
+        <li>Click the card to flip and see answer.</li>
+        <li>Use Next and Previous buttons to navigate.</li>
+        <li>Best for quick revision before exams.</li>
+      </ul>
+    </div>
+
+    <div class="help-section">
+      <h2>📊 Progress Module</h2>
+      <ul>
+        <li>Open Progress page.</li>
+        <li>View quiz scores and performance stats.</li>
+        <li>Track your improvement over time.</li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function goTo(page) {
+  window.location.href = page;
+}
+
+function logout() {
+  window.location.href = "/logout";
+}
+</script>
+
+</body>
+</html>
