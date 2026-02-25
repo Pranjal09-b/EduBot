@@ -6,130 +6,180 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-*{
-  box-sizing:border-box;
-  font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-body{
-  margin:0;
-  background:#f0f2f5;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+body {
+  margin: 0;
+  background: #f0f2f5;
+  min-height: 100vh;
 }
 
-.app{
-  width:900px;
-  background:white;
-  border-radius:16px;
-  padding:28px 32px;
-  box-shadow:0 8px 30px rgba(0,0,0,0.12);
+/* MAIN LAYOUT */
+.container {
+  display: flex;
+  min-height: 100vh;
 }
 
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid #eee;
-  padding-bottom:16px;
+/* LEFT SIDEBAR */
+.main-sidebar {
+  width: 220px;
+  background: #ffffff;
+  border-right: 1px solid #eee;
+  padding: 25px 18px;
+  display: flex;
+  flex-direction: column;
 }
 
-.brand{
-  font-size:20px;
-  font-weight:700;
-  color:#6f42c1;
+.brand {
+  font-size: 20px;
+  font-weight: 700;
+  color: #6f42c1;
+  margin-bottom: 40px;
 }
 
-.logout{
-  border:1px solid #ddd;
-  padding:8px 14px;
-  border-radius:8px;
-  background:white;
-  cursor:pointer;
-  font-weight:600;
+.nav-btn {
+  background: none;
+  border: none;
+  padding: 12px 14px;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: 0.2s;
 }
 
-.title{
-  margin:20px 0;
+.nav-btn:hover {
+  background: #f3e8ff;
+  color: #6f42c1;
 }
 
-.quiz-card{
-  background:#fafafa;
-  border:1px solid #eee;
-  border-radius:14px;
-  padding:18px;
-  margin-bottom:14px;
+.nav-btn.active {
+  background: #6f42c1;
+  color: #fff;
 }
 
-.quiz-card h3{
-  margin:0;
-  color:#333;
+/* MAIN CONTENT */
+.main {
+  flex: 1;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
 }
 
-.quiz-card a{
-  display:inline-block;
-  margin-top:8px;
-  text-decoration:none;
-  font-weight:600;
-  color:#6f42c1;
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 16px;
 }
 
-.bottom-nav{
-  margin-top:18px;
-  border-top:1px solid #eee;
-  padding-top:12px;
-  display:flex;
-  justify-content:space-around;
+.logout {
+  border: 1px solid #ddd;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
 }
 
-.bottom-nav button{
-  background:none;
-  border:none;
-  cursor:pointer;
-  font-weight:600;
-  color:#666;
+/* TITLE */
+.title {
+  margin: 24px 0 18px;
 }
 
-.bottom-nav .active{
-  color:#6f42c1;
+.title h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.title p {
+  margin-top: 6px;
+  color: #555;
+}
+
+/* QUIZ CARDS */
+.quiz-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 5px 15px rgb(0 0 0 / 0.08);
+  transition: 0.3s;
+}
+
+.quiz-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgb(0 0 0 / 0.12);
+}
+
+.quiz-card h3 {
+  margin: 0;
+  color: #333;
+}
+
+.quiz-card a {
+  display: inline-block;
+  margin-top: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  color: #6f42c1;
+}
+
+.quiz-card a:hover {
+  text-decoration: underline;
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="container">
 
-  <!-- Header -->
-  <div class="header">
-    <div class="brand">📝 EduBot Quizzes</div>
-    <button class="logout" onclick="window.location.href='/logout'">Logout</button>
+  <!-- LEFT SIDEBAR -->
+  <div class="main-sidebar">
+    <div class="brand">📘 EduBot</div>
+
+    <button class="nav-btn" onclick="goTo('/home')">🏠 Home</button>
+    <button class="nav-btn" onclick="goTo('/chat')">💬 Chat</button>
+    <button class="nav-btn" onclick="goTo('/program')">💻 Program</button>
+    <button class="nav-btn active">📝 Quiz</button>
+    <button class="nav-btn" onclick="goTo('/flashcard')">📚 Cards</button>
+    <button class="nav-btn" onclick="goTo('/progress')">📊 Progress</button>
+    <button class="nav-btn" onclick="goTo('/help')">❓ Help</button>
   </div>
 
-  <!-- Title -->
-  <div class="title">
-    <h1>Available Quizzes</h1>
-    <p>Choose a quiz and test your knowledge</p>
-  </div>
+  <!-- MAIN CONTENT -->
+  <div class="main">
 
-  <!-- Quiz List -->
-  {% for quiz in quizzes %}
-  <div class="quiz-card">
-    <h3>{{ quiz.title }}</h3>
-    <a href="/start_quiz/{{ quiz.quiz_id }}">Start Quiz →</a>
-  </div>
-  {% endfor %}
+    <!-- Header -->
+    <div class="header">
+      <button class="logout" onclick="window.location.href='/logout'">
+        Logout
+      </button>
+    </div>
 
-  <!-- Bottom Navigation -->
-  <div class="bottom-nav">
-    <button onclick="goTo('/home')">Home</button>
-    <button onclick="goTo('/chat')">Chat</button>
-    <button onclick="goTo('/program')">Program</button>
-    <button class="active">Quiz</button>
-    <button onclick="goTo('/flashcard')">Cards</button>
-    <button onclick="goTo('/progress')">Progress</button>
+    <!-- Title -->
+    <div class="title">
+      <h1>Available Quizzes</h1>
+      <p>Choose a quiz and test your knowledge</p>
+    </div>
+
+    <!-- Quiz List -->
+    {% for quiz in quizzes %}
+    <div class="quiz-card">
+      <h3>{{ quiz.title }}</h3>
+      <a href="/start_quiz/{{ quiz.quiz_id }}">Start Quiz →</a>
+    </div>
+    {% endfor %}
+
   </div>
 
 </div>
