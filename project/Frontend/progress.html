@@ -13,19 +13,63 @@
 
 body {
   margin: 0;
-  background: #f3f4f6;
-  display: flex;
-  justify-content: center;
-  padding: 30px;
+  background: #f0f2f5;
+  min-height: 100vh;
 }
 
-.app {
-  width: 100%;
-  max-width: 1000px;
-  background: #fff;
-  border-radius: 18px;
-  padding: 30px 36px;
-  box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+/* MAIN LAYOUT */
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.main-sidebar {
+  width: 220px;
+  background: #ffffff;
+  border-right: 1px solid #eee;
+  padding: 25px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  font-size: 20px;
+  font-weight: 700;
+  color: #6f42c1;
+  margin-bottom: 40px;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  padding: 12px 14px;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: 0.2s;
+}
+
+.nav-btn:hover {
+  background: #f3e8ff;
+  color: #6f42c1;
+}
+
+.nav-btn.active {
+  background: #6f42c1;
+  color: #fff;
+}
+
+/* MAIN CONTENT */
+.main {
+  flex: 1;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* HEADER */
@@ -37,50 +81,46 @@ body {
   padding-bottom: 16px;
 }
 
-.brand {
-  font-size: 22px;
-  font-weight: 700;
-  color: #6f42c1;
-}
-
-.logout {
-  border: 1px solid #ddd;
-  padding: 8px 16px;
-  border-radius: 10px;
-  background: #fff;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-/* TITLE */
-.title {
-  margin: 24px 0;
-}
-
-.title h1 {
+.header h1 {
   margin: 0;
   font-size: 26px;
 }
 
+.logout {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* TITLE */
 .title p {
-  margin-top: 6px;
   color: #666;
+  margin: 20px 0 25px;
 }
 
 /* STATS */
 .stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  margin-bottom: 30px;
+  gap: 20px;
+  margin-bottom: 35px;
 }
 
 .stat-card {
-  background: #fafafa;
+  background: #ffffff;
   border-radius: 16px;
   padding: 22px;
   text-align: center;
-  border-left: 6px solid #6f42c1;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  transition: 0.3s;
+  border-top: 4px solid #6f42c1;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
 }
 
 .stat-card h2 {
@@ -97,11 +137,7 @@ body {
 
 /* PROGRESS BAR */
 .progress-section {
-  margin-bottom: 30px;
-}
-
-.progress-section h3 {
-  margin-bottom: 12px;
+  margin-bottom: 35px;
 }
 
 .progress-bar {
@@ -130,14 +166,20 @@ body {
 }
 
 .activity-item {
-  background: #fafafa;
+  background: #ffffff;
   padding: 14px 18px;
   border-radius: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   gap: 12px;
   font-weight: 500;
+  transition: 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.activity-item:hover {
+  background: #f3eefc;
 }
 
 .activity-icon {
@@ -145,124 +187,100 @@ body {
   width: 24px;
 }
 
-/* EMPTY MESSAGE */
 .empty {
   color: #888;
   font-style: italic;
   padding: 10px;
-}
-
-/* BOTTOM NAV */
-.bottom-nav {
-  margin-top: 30px;
-  border-top: 1px solid #eee;
-  padding-top: 14px;
-  display: flex;
-  justify-content: space-around;
-}
-
-.bottom-nav button {
-  background: none;
-  border: none;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  color: #666;
-}
-
-.bottom-nav .active {
-  color: #6f42c1;
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="container">
 
-  <!-- HEADER -->
-  <div class="header">
-    <div class="brand">📈 EduBot Progress</div>
-    <button class="logout" onclick="window.location.href='/logout'">Logout</button>
+  <!-- SIDEBAR -->
+  <div class="main-sidebar">
+    <div class="brand">📘 EduBot</div>
+
+    <button class="nav-btn" onclick="goTo('/home')">🏠 Home</button>
+    <button class="nav-btn" onclick="goTo('/chat')">💬 Chat</button>
+    <button class="nav-btn" onclick="goTo('/program')">💻 Program</button>
+    <button class="nav-btn" onclick="goTo('/quiz')">📝 Quiz</button>
+    <button class="nav-btn" onclick="goTo('/flashcard')">📚 Flashcards</button>
+    <button class="nav-btn active">📊 Progress</button>
+    <button class="nav-btn" onclick="goTo('/help')">❓ Help</button>
   </div>
 
-  <!-- TITLE -->
-  <div class="title">
-    <h1>Progress Tracker</h1>
-    <p>Monitor your learning progress and achievements</p>
-  </div>
+  <!-- MAIN CONTENT -->
+  <div class="main">
 
-  <!-- STATS -->
-  <div class="stats">
-    <div class="stat-card">
-      <h2>{{ quizzes_completed }}</h2>
-      <p>Quizzes Completed</p>
+    <div class="header">
+      <h1>Progress Tracker</h1>
+      <button class="logout" onclick="window.location.href='/logout'">Logout</button>
     </div>
 
-    <div class="stat-card">
-      <h2>{{ avg_score }}%</h2>
-      <p>Average Quiz Score</p>
+    <div class="title">
+      <p>Monitor your learning progress and achievements 🚀</p>
     </div>
 
-    <div class="stat-card">
-      <h2>{{ perfect_scores }}</h2>
-      <p>Perfect Scores</p>
-    </div>
-  </div>
-
-  <!-- COURSE PROGRESS -->
-  <div class="progress-section">
-    <h3>Overall Course Progress</h3>
-    <div class="progress-bar">
-      <div class="progress-fill" style="width: {{ progress_percent }}%;"></div>
-    </div>
-    <div class="progress-text">{{ progress_percent }}% Completed</div>
-  </div>
-
-  <!-- RECENT ACTIVITY -->
-  <div class="activity">
-  <h3>Recent Activity</h3>
-
-  {% if recent_activity and recent_activity|length > 0 %}
-    
-    {% for row in recent_activity %}
-      <div class="activity-item">
-
-        {% if row.activity_type == 'quiz' %}
-          <div class="activity-icon">✔️</div>
-
-        {% elif row.activity_type == 'flashcard' %}
-          <div class="activity-icon">📚</div>
-
-        {% elif row.activity_type == 'program' %}
-          <div class="activity-icon">💻</div>
-
-        {% else %}
-          <div class="activity-icon">📌</div>
-        {% endif %}
-
-        <div>
-          {{ row.description }}<br>
-          <small>{{ row.created_at.strftime("%d %b %Y %I:%M %p") }}</small>
-        </div>
-
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <h2>{{ quizzes_completed }}</h2>
+        <p>Quizzes Completed</p>
       </div>
-    {% endfor %}
 
-  {% else %}
-    <div class="empty">No recent activity yet.</div>
-  {% endif %}
-</div>
+      <div class="stat-card">
+        <h2>{{ avg_score }}%</h2>
+        <p>Average Quiz Score</p>
+      </div>
 
+      <div class="stat-card">
+        <h2>{{ perfect_scores }}</h2>
+        <p>Perfect Scores</p>
+      </div>
+    </div>
 
-  <!-- BOTTOM NAV -->
-  <div class="bottom-nav">
-    <button onclick="goTo('/home')">Home</button>
-    <button onclick="goTo('/chat')">Chat</button>
-    <button onclick="goTo('/program')">Program</button>
-    <button onclick="goTo('/quiz')">Quiz</button>
-    <button onclick="goTo('/flashcard')">Cards</button>
-    <button class="active">Progress</button>
+    <!-- Progress -->
+    <div class="progress-section">
+      <h3>Overall Course Progress</h3>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: {{ progress_percent }}%;"></div>
+      </div>
+      <div class="progress-text">{{ progress_percent }}% Completed</div>
+    </div>
+
+    <!-- Activity -->
+    <div class="activity">
+      <h3>Recent Activity</h3>
+
+      {% if recent_activity and recent_activity|length > 0 %}
+        {% for row in recent_activity %}
+        <div class="activity-item">
+
+          {% if row.activity_type == 'quiz' %}
+            <div class="activity-icon">✔️</div>
+          {% elif row.activity_type == 'flashcard' %}
+            <div class="activity-icon">📚</div>
+          {% elif row.activity_type == 'program' %}
+            <div class="activity-icon">💻</div>
+          {% else %}
+            <div class="activity-icon">📌</div>
+          {% endif %}
+
+          <div>
+            {{ row.description }}<br>
+            <small>{{ row.created_at.strftime("%d %b %Y %I:%M %p") }}</small>
+          </div>
+
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty">No recent activity yet.</div>
+      {% endif %}
+    </div>
+
   </div>
 
 </div>
