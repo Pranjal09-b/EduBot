@@ -15,29 +15,22 @@ body {
   margin: 0;
   background: #f0f2f5;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-/* App Container */
-.app {
-  width: 900px; /* same as program.html */
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-  padding: 28px 32px;
+/* MAIN LAYOUT */
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: #ffffff;
+  border-right: 1px solid #eee;
+  padding: 25px 18px;
   display: flex;
   flex-direction: column;
-}
-
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 16px;
 }
 
 .brand {
@@ -47,6 +40,48 @@ body {
   font-size: 20px;
   font-weight: 700;
   color: #6f42c1;
+  margin-bottom: 40px;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  padding: 12px 14px;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: 0.2s;
+}
+
+.nav-btn:hover {
+  background: #f3e8ff;
+  color: #6f42c1;
+}
+
+.nav-btn.active {
+  background: #6f42c1;
+  color: #fff;
+}
+
+/* MAIN CONTENT */
+.main {
+  flex: 1;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 16px;
 }
 
 .logout {
@@ -58,7 +93,7 @@ body {
   font-weight: 600;
 }
 
-/* Title */
+/* TITLE */
 .title {
   margin: 24px 0 18px;
 }
@@ -73,13 +108,14 @@ body {
   color: #555;
 }
 
-/* Chat Content */
+/* CONTENT */
 .content {
   display: flex;
   gap: 20px;
+  flex: 1;
 }
 
-/* Chat Area */
+/* CHAT AREA */
 .chat-area {
   flex: 2;
   display: flex;
@@ -118,7 +154,7 @@ body {
   border-top-right-radius: 0;
 }
 
-/* Input */
+/* INPUT */
 .chat-input {
   display: flex;
   gap: 12px;
@@ -149,7 +185,7 @@ body {
   background: #5a34a1;
 }
 
-/* Stats Panel */
+/* STATS PANEL */
 .stats {
   flex: 1;
   background: #fafafa;
@@ -188,100 +224,82 @@ body {
   font-size: 14px;
   color: #555;
 }
-
-/* Bottom Navigation */
-.bottom-nav {
-  margin-top: 20px;
-  border-top: 1px solid #eee;
-  padding-top: 14px;
-  display: flex;
-  justify-content: space-around;
-  font-size: 14px;
-}
-
-.bottom-nav button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  color: #666;
-}
-
-.bottom-nav .active {
-  color: #6f42c1;
-}
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="container">
 
-  <!-- Header -->
-  <div class="header">
-    <div class="brand">💬 EduBot Chat</div>
-    <button class="logout" onclick="logout()">Logout</button>
+  <!-- LEFT SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">📘 EduBot</div>
+
+    <button class="nav-btn" onclick="goTo('/home')">🏠 Home</button>
+    <button class="nav-btn active">💬 Chat</button>
+    <button class="nav-btn" onclick="goTo('/program')">💻 Program</button>
+    <button class="nav-btn" onclick="goTo('/quiz')">📝 Quiz</button>
+    <button class="nav-btn" onclick="goTo('/flashcard')">📚 Cards</button>
+    <button class="nav-btn" onclick="goTo('/progress')">📊 Progress</button>
+    <button class="nav-btn" onclick="goTo('/help')">❓ Help</button>
   </div>
 
-  <!-- Title -->
-  <div class="title">
-    <h1>CS Learning Chatbot</h1>
-    <p>Ask questions about Java, quizzes, or programming concepts</p>
-  </div>
+  <!-- MAIN CONTENT -->
+  <div class="main">
 
-  <!-- Content -->
-  <div class="content">
+    <!-- Header -->
+    <div class="header">
+      <button class="logout" onclick="logout()">Logout</button>
+    </div>
 
-    <!-- Chat Area -->
-    <div class="chat-area">
-      <div class="chat-messages" id="chatMessages">
-        <div class="message bot">
-          Hi 👋 I’m your CS Learning Assistant. Ask me about Java, quizzes, or programming concepts!
+    <!-- Title -->
+    <div class="title">
+      <h1>CS Learning Chatbot</h1>
+      <p>Ask questions about Java, quizzes, or programming concepts</p>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- Chat Area -->
+      <div class="chat-area">
+        <div class="chat-messages" id="chatMessages">
+          <div class="message bot">
+            Hi 👋 I’m your CS Learning Assistant. Ask me about Java, quizzes, or programming concepts!
+          </div>
+        </div>
+
+        <div class="chat-input">
+          <input type="text" id="userInput" placeholder="Type your message..." onkeypress="handleEnter(event)">
+          <button onclick="sendMessage()">Send</button>
         </div>
       </div>
 
-      <div class="chat-input">
-        <input type="text" id="userInput" placeholder="Type your message..." onkeypress="handleEnter(event)">
-        <button onclick="sendMessage()">Send</button>
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat">
+          <h3>85%</h3>
+          <p>Knowledge Score</p>
+        </div>
+        <div class="stat blue">
+          <h3 id="questionCount">0</h3>
+          <p>Questions Asked</p>
+        </div>
+        <div class="stat purple">
+          <h3>4</h3>
+          <p>Perfect Interactions</p>
+        </div>
       </div>
-    </div>
 
-    <!-- Stats Panel -->
-    <div class="stats">
-      <div class="stat">
-        <h3>85%</h3>
-        <p>Knowledge Score</p>
-      </div>
-      <div class="stat blue">
-        <h3 id="questionCount">0</h3>
-        <p>Questions Asked</p>
-      </div>
-      <div class="stat purple">
-        <h3>4</h3>
-        <p>Perfect Interactions</p>
-      </div>
     </div>
-
   </div>
-  <!-- Bottom Nav -->
- <div class="bottom-nav">
-  <button onclick="goTo('/home')">Home</button>
-  <button class="active">Chat</button>
-  <button onclick="goTo('/program')">Program</button>
-  <button onclick="goTo('/quiz')">Quiz</button>
-  <button onclick="goTo('/flashcard')">Cards</button>
-  <button onclick="goTo('/progress')">Progress</button>
-</div>
-
 </div>
 
 <script>
 const chatMessages = document.getElementById("chatMessages");
 const userInput = document.getElementById("userInput");
-
 let questionCount = 0;
 
-/* Send Message */
 async function sendMessage() {
     const text = userInput.value.trim();
     if (!text) return;
@@ -292,15 +310,12 @@ async function sendMessage() {
     try {
         const response = await fetch("/ask", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message: text })
         });
 
         const data = await response.json();
         addMessage(data.reply, "bot");
-
         updateStats();
 
     } catch (error) {
@@ -308,12 +323,10 @@ async function sendMessage() {
     }
 }
 
-/* Handle Enter */
 function handleEnter(e) {
     if (e.key === "Enter") sendMessage();
 }
 
-/* Add Message to UI */
 function addMessage(text, sender) {
     const msg = document.createElement("div");
     msg.classList.add("message", sender);
@@ -322,7 +335,6 @@ function addMessage(text, sender) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-/* Load Chat History on Page Load */
 async function loadChatHistory() {
     try {
         const response = await fetch("/chat-history");
@@ -341,13 +353,11 @@ async function loadChatHistory() {
     }
 }
 
-/* Update Stats */
 function updateStats() {
     questionCount++;
     document.getElementById("questionCount").textContent = questionCount;
 }
 
-/* Navigation */
 function goTo(page) {
     window.location.href = page;
 }
@@ -356,7 +366,6 @@ function logout() {
     window.location.href = "/logout";
 }
 
-/* Auto Load */
 window.onload = loadChatHistory;
 </script>
 
