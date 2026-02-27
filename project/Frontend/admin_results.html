@@ -1,32 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin - Results</title>
+<meta charset="UTF-8">
+<title>Quiz Results</title>
+
+<style>
+body { margin:0; font-family:'Segoe UI'; background:#f4f6f9; }
+.container { display:flex; }
+.sidebar {
+    width:240px; height:100vh; background:#1e293b;
+    color:white; padding:20px; position:fixed;
+}
+.sidebar h2 { text-align:center; margin-bottom:40px; }
+.sidebar a {
+    color:white; text-decoration:none; display:block;
+    padding:12px; border-radius:6px; margin-bottom:10px;
+}
+.sidebar a:hover { background:#334155; }
+.main { margin-left:260px; padding:30px; flex:1; }
+.card {
+    background:white; padding:20px;
+    border-radius:12px; box-shadow:0 3px 8px rgba(0,0,0,0.08);
+}
+table { width:100%; border-collapse:collapse; }
+th, td { padding:12px; border-bottom:1px solid #ddd; }
+th { background:#2563eb; color:white; }
+</style>
 </head>
+
 <body>
 
-<h2>All Quiz Results</h2>
+<div class="container">
 
-<table border="1" cellpadding="10">
-    <tr>
-        <th>Student</th>
-        <th>Quiz</th>
-        <th>Score</th>
-        <th>Date</th>
-    </tr>
+<div class="sidebar">
+    <h2>EduBot Admin</h2>
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/admin/quizzes">Manage Quizzes</a>
+    <a href="/admin/programs">Manage Programs</a>
+    <a href="/admin/results">View Results</a>
+    <a href="/admin/logout">Logout</a>
+</div>
 
-    {% for r in results %}
-    <tr>
-        <td>{{ r.student_name }}</td>
-        <td>{{ r.quiz_title }}</td>
-        <td>{{ r.score }}</td>
-        <td>{{ r.created_at }}</td>
-    </tr>
-    {% endfor %}
-</table>
+<div class="main">
+    <h1>All Quiz Results</h1>
 
-<br>
-<a href="/admin/dashboard">Back to Dashboard</a>
+    <div class="card">
+        <table>
+            <tr>
+                <th>Student</th>
+                <th>Quiz</th>
+                <th>Score</th>
+                <th>Date</th>
+            </tr>
 
+            {% for r in results %}
+            <tr>
+                <td>{{ r.student_name }}</td>
+                <td>{{ r.quiz_title }}</td>
+                <td>{{ r.score }}</td>
+                <td>{{ r.created_at }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+</div>
 </body>
 </html>
