@@ -1,34 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin - Questions</title>
+<meta charset="UTF-8">
+<title>Manage Questions</title>
+
+<style>
+body { margin:0; font-family:'Segoe UI'; background:#f4f6f9; }
+.container { display:flex; }
+.sidebar {
+    width:240px; height:100vh; background:#1e293b;
+    color:white; padding:20px; position:fixed;
+}
+.sidebar h2 { text-align:center; margin-bottom:40px; }
+.sidebar a {
+    color:white; text-decoration:none; display:block;
+    padding:12px; border-radius:6px; margin-bottom:10px;
+}
+.sidebar a:hover { background:#334155; }
+.main { margin-left:260px; padding:30px; flex:1; }
+.card {
+    background:white; padding:20px;
+    border-radius:12px; box-shadow:0 3px 8px rgba(0,0,0,0.08);
+}
+table { width:100%; border-collapse:collapse; }
+th, td { padding:12px; border-bottom:1px solid #ddd; }
+th { background:#2563eb; color:white; }
+button {
+    padding:6px 12px; border:none; border-radius:6px;
+    background:#2563eb; color:white; cursor:pointer;
+}
+</style>
 </head>
+
 <body>
 
-<h2>Questions for: {{ quiz.title }}</h2>
+<div class="container">
 
-<a href="/admin/add_question/{{ quiz_id }}">Add New Question</a>
-<br><br>
+<div class="sidebar">
+    <h2>EduBot Admin</h2>
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/admin/quizzes">Manage Quizzes</a>
+    <a href="/admin/programs">Manage Programs</a>
+    <a href="/admin/results">View Results</a>
+    <a href="/admin/logout">Logout</a>
+</div>
 
-<table border="1" cellpadding="10">
-    <tr>
-        <th>ID</th>
-        <th>Question</th>
-        <th>Correct Option</th>
-    </tr>
+<div class="main">
+    <h1>Questions for: {{ quiz.title }}</h1>
 
-    {% for q in questions %}
-    <tr>
-        <td>{{ q.question_id }}</td>
-        <td>{{ q.question_text }}</td>
-        <td>{{ q.correct_option }}</td>
-    </tr>
-    {% endfor %}
+    <div class="card">
+        <a href="/admin/add_question/{{ quiz_id }}">
+            <button>Add New Question</button>
+        </a>
+        <br><br>
 
-</table>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Question</th>
+                <th>Correct Option</th>
+            </tr>
 
-<br>
-<a href="/admin/quizzes">Back to Quizzes</a>
+            {% for q in questions %}
+            <tr>
+                <td>{{ q.question_id }}</td>
+                <td>{{ q.question_text }}</td>
+                <td>{{ q.correct_option }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
 
+</div>
 </body>
 </html>
