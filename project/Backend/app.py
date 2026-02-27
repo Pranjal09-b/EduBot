@@ -793,3 +793,35 @@ def add_flashcard(
     conn.close()
 
     return RedirectResponse("/admin/dashboard", status_code=303)
+
+# ================= ADMIN VIEW RESULTS ==================
+
+@app.get("/admin/results", response_class=HTMLResponse)
+def admin_results(request: Request):
+
+    if request.session.get("role") != "admin":
+        return RedirectResponse("/login", status_code=303)
+
+    conn = get_connection()
+    cur = conn.cursor(dictionary=True)
+
+    cur.execute("""
+        SELECT students.name AS student_name,
+               quizzes.title AS quiz_title,
+               results.score,
+               results.created_at
+        FROM results
+        JOIN students ON students.student_id = results.student_id
+        JOIN quizzes ON quizzes.quiz_id = results.quiz_id
+        ORDER BY results.created_at DESC
+    """)
+
+    results = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return templates.TemplateResponse(
+        "admin_results.html",
+        {"request": request, "results": results}
+    )
