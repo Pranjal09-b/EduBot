@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - Questions</title>
+</head>
+<body>
+
+<h2>Questions for: {{ quiz.title }}</h2>
+
+<a href="/admin/add_question/{{ quiz_id }}">Add New Question</a>
+<br><br>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>ID</th>
+        <th>Question</th>
+        <th>Correct Option</th>
+    </tr>
+
+    {% for q in questions %}
+    <tr>
+        <td>{{ q.question_id }}</td>
+        <td>{{ q.question_text }}</td>
+        <td>{{ q.correct_option }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+<br>
+<a href="/admin/quizzes">Back to Quizzes</a>
+
+</body>
+</html>
