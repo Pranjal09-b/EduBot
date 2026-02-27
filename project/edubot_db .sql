@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 25, 2026 at 03:03 PM
+-- Generation Time: Feb 27, 2026 at 03:35 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -395,16 +395,16 @@ INSERT INTO `questions` (`question_id`, `quiz_id`, `question_text`, `correct_opt
 (21, 2, 'Polymorphism means?', 'A', 'Many forms', 'Many classes', 'Many variables', 'Many loops'),
 (22, 2, 'Which collection allows duplicates?', 'B', 'Set', 'List', 'Map', 'Queue'),
 (23, 2, 'Garbage collection is handled by?', 'D', 'Programmer', 'Compiler', 'OS', 'JVM'),
-(24, 3, 'Which keyword creates a class?', 'C', 'define', 'object', 'class', 'struct'),
-(25, 3, 'Which data type is immutable?', 'A', 'tuple', 'list', 'dict', 'set'),
-(26, 3, 'Indentation in Python is?', 'B', 'Optional', 'Mandatory', 'Ignored', 'Deprecated'),
-(27, 3, 'Which function prints output?', 'D', 'echo()', 'display()', 'write()', 'print()'),
-(28, 3, 'Which operator checks equality?', 'A', '==', '=', '!=', '<>'),
-(29, 3, 'Which keyword is used for loop control skip?', 'C', 'break', 'exit', 'continue', 'stop'),
-(30, 3, 'Dictionaries store data as?', 'B', 'List items', 'Key-value pairs', 'Indexes', 'Tuples'),
-(31, 3, 'Which function gets user input?', 'D', 'scan()', 'read()', 'get()', 'input()'),
-(32, 3, 'Which keyword defines anonymous function?', 'A', 'lambda', 'func', 'anon', 'def'),
-(33, 3, 'Which data type stores unique values?', 'C', 'list', 'tuple', 'set', 'string');
+(34, 3, 'What will happen if the main() method is declared as private in Java?', 'option_c', 'Program compiles and runs normally', 'Program compiles but does not run', 'Program does not compile', 'Program throws runtime exception'),
+(35, 3, 'Which of the following statements about Java interfaces (before Java 8) is true?', 'option_b', 'Interfaces can have constructors', 'Interfaces cannot have method implementations', 'Interfaces can have instance variables', 'Interfaces can extend classes'),
+(36, 3, 'What is the output of: System.out.println(10 + 20 + \"Java\" + 10 + 20);', 'option_a', '30Java1020', '1020Java1020', '30Java30', 'Java102030'),
+(37, 3, 'Which exception is thrown when a thread tries to access an object\'s monitor that another thread holds?', 'option_d', 'InterruptedException', 'IllegalThreadStateException', 'RuntimeException', 'IllegalMonitorStateException'),
+(38, 3, 'Which keyword prevents method overriding?', 'option_b', 'static', 'final', 'abstract', 'synchronized'),
+(39, 3, 'What is the default value of a local variable in Java?', 'option_c', '0', 'null', 'Local variables have no default value', 'Depends on data type'),
+(40, 3, 'Which of the following is not part of JVM?', 'option_d', 'Class Loader', 'Bytecode Verifier', 'Execution Engine', 'Java Compiler'),
+(41, 3, 'Which collection class allows you to grow or shrink its size dynamically and provides indexed access?', 'option_a', 'ArrayList', 'HashSet', 'TreeMap', 'HashMap'),
+(42, 3, 'Which of the following is true about the volatile keyword?', 'option_c', 'It makes variable immutable', 'It prevents serialization', 'It ensures visibility of changes to variables across threads', 'It locks the variable'),
+(43, 3, 'Which method is called before an object is garbage collected?', 'option_b', 'delete()', 'finalize()', 'destroy()', 'dispose()');
 
 -- --------------------------------------------------------
 
@@ -425,8 +425,8 @@ CREATE TABLE `quizzes` (
 
 INSERT INTO `quizzes` (`quiz_id`, `title`, `created_by`, `created_at`) VALUES
 (1, 'Java Basics Quiz', 1, '2026-02-06 14:01:58'),
-(2, 'Java OOP & Advanced Quiz', 1, '2026-02-15 07:12:12'),
-(3, 'Python Fundamentals Quiz', 1, '2026-02-15 07:12:12');
+(2, 'Java OOP Concept Quiz', 1, '2026-02-15 07:12:12'),
+(3, 'Advanced Java Quiz', 1, '2026-02-27 14:31:00');
 
 -- --------------------------------------------------------
 
@@ -456,7 +456,8 @@ INSERT INTO `results` (`result_id`, `student_id`, `quiz_id`, `score`, `created_a
 (7, 1, 1, 3, '2026-02-11 05:50:21'),
 (8, 1, 1, 2, '2026-02-11 05:50:21'),
 (9, 1, 1, 1, '2026-02-11 05:50:21'),
-(10, 1, 1, 1, '2026-02-11 05:50:21');
+(10, 1, 1, 1, '2026-02-11 05:50:21'),
+(12, 8, 1, 4, '2026-02-27 05:24:00');
 
 -- --------------------------------------------------------
 
@@ -517,7 +518,9 @@ INSERT INTO `student_activity` (`activity_id`, `student_id`, `activity_type`, `d
 (14, 8, 'flashcard', 'Viewed File Handling flashcards', '2026-02-24 13:55:10'),
 (15, 8, 'flashcard', 'Viewed Java Basics flashcards', '2026-02-24 14:01:03'),
 (16, 8, 'flashcard', 'Viewed Java 8 Features flashcards', '2026-02-24 14:01:25'),
-(17, 8, 'flashcard', 'Viewed Java Basics flashcards', '2026-02-24 14:01:45');
+(17, 8, 'flashcard', 'Viewed Java Basics flashcards', '2026-02-24 14:01:45'),
+(18, 8, 'quiz', 'Completed Java Basics Quiz (Score: 4)', '2026-02-27 05:24:00'),
+(19, 8, 'flashcard', 'Viewed Java Basics flashcards', '2026-02-27 05:24:15');
 
 -- --------------------------------------------------------
 
@@ -645,7 +648,7 @@ ALTER TABLE `programs`
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `question_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `question_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `quizzes`
@@ -657,7 +660,7 @@ ALTER TABLE `quizzes`
 -- AUTO_INCREMENT for table `results`
 --
 ALTER TABLE `results`
-  MODIFY `result_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `result_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `students`
@@ -669,7 +672,7 @@ ALTER TABLE `students`
 -- AUTO_INCREMENT for table `student_activity`
 --
 ALTER TABLE `student_activity`
-  MODIFY `activity_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `activity_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
