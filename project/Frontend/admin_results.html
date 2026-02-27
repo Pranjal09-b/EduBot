@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - Results</title>
+</head>
+<body>
+
+<h2>All Quiz Results</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Student</th>
+        <th>Quiz</th>
+        <th>Score</th>
+        <th>Date</th>
+    </tr>
+
+    {% for r in results %}
+    <tr>
+        <td>{{ r.student_name }}</td>
+        <td>{{ r.quiz_title }}</td>
+        <td>{{ r.score }}</td>
+        <td>{{ r.created_at }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<a href="/admin/dashboard">Back to Dashboard</a>
+
+</body>
+</html>
