@@ -821,7 +821,73 @@ def admin_results(request: Request):
     cur.close()
     conn.close()
 
+    @app.get("/admin/quizzes", response_class=HTMLResponse)
+def admin_quizzes(request: Request):
+
+    if request.session.get("role") != "admin":
+        return RedirectResponse("/login", status_code=303)
+
+    conn = get_connection()
+    cur = conn.cursor(dictionary=True)
+
+    cur.execute("""
+        SELECT quiz_id, title, created_at
+        FROM quizzes
+        ORDER BY quiz_id DESC
+    """)
+
+    quizzes = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return templates.TemplateResponse(
+        "admin_quiz.html",
+        {"request": request, "quizzes": quizzes}
+    )
     return templates.TemplateResponse(
         "admin_results.html",
         {"request": request, "results": results}
+    )
+
+@app.get("/admin/questions/{quiz_id}", response_class=HTMLResponse)
+def admin_questions(request: Request, quiz_id: int):
+
+    if request.session.get("role") != "admin":
+        return RedirectResponse("/login", status_code=303)
+
+    conn = get_connection()
+    cur = conn.cursor(dictionary=True)
+
+    # Get quiz title
+    cur.execute("SELECT title FROM quizzes WHERE quiz_id=%s", (quiz_id,))
+    quiz = cur.fetchone()
+
+    if not quiz:
+        cur.close()
+        conn.close()
+        return HTMLResponse("Quiz not found", status_code=404)
+
+    # Get questions
+    cur.execute("""
+        SELECT question_id,
+               question_text,
+               correct_option
+        FROM questions
+        WHERE quiz_id=%s
+    """, (quiz_id,))
+
+    questions = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return templates.TemplateResponse(
+        "admin_question.html",
+        {
+            "request": request,
+            "quiz": quiz,
+            "questions": questions,
+            "quiz_id": quiz_id
+        }
     )
